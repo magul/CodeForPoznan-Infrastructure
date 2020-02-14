@@ -2,6 +2,27 @@
 
 Repository contains description of Code for Poznań infrastructure.
 
+## How to run
+
+Terraform version:
+```
+Terraform v0.12.20
++ provider.aws v2.36.0
+
+```
+Initialize project
+```
+terraform init
+```
+Check what terraform intend to change
+```
+terraform plan
+```
+Run the change
+```
+terraform apply
+```
+
 ## License
 
 Code is licensed under [MIT LIcense](./LICENSE).
