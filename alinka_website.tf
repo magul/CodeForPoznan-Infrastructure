@@ -14,7 +14,7 @@ module alinka_website_frontend_assets {
   source       = "./frontend_assets"
 
   name         = "alinka_website"
-  domain       = "alinka.io"
+  domain       = "dev.alinka.io"
   s3_bucket    = aws_s3_bucket.codeforpoznan_public
   route53_zone = aws_route53_zone.alinka_website
   iam_user     = aws_iam_user.alinka_website
