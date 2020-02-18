@@ -24,28 +24,11 @@ module codeforpoznan_pl_v2_frontend_assets {
   acm_certificate = module.codeforpoznan_pl_v2_ssl_certificate.certificate
 }
 
-resource "aws_ses_domain_identity" "codeforpoznan_pl" {
-  domain = "codeforpoznan.pl"
-}
+module codeforpoznan_pl_mailing_identity {
+  source       = "./mailing_identity"
 
-resource "aws_route53_record" "codeforpoznan_pl_ses_verification_record" {
-  zone_id = aws_route53_zone.codeforpoznan_pl.id
-  name    = "_amazonses.${aws_ses_domain_identity.codeforpoznan_pl.domain}"
-  type    = "TXT"
-  ttl     = "600"
-  records = [aws_ses_domain_identity.codeforpoznan_pl.verification_token]
-
-  depends_on = [
-    aws_ses_domain_identity.codeforpoznan_pl,
-  ]
-}
-
-resource "aws_ses_domain_identity_verification" "codeforpoznan_pl" {
-  domain = aws_ses_domain_identity.codeforpoznan_pl.domain
-
-  depends_on = [
-    aws_route53_record.codeforpoznan_pl_ses_verification_record,
-  ]
+  domain       = "codeforpoznan.pl"
+  route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
 resource "aws_iam_policy" "codeforpoznan_pl_ses_policy" {
@@ -58,10 +41,14 @@ resource "aws_iam_policy" "codeforpoznan_pl_ses_policy" {
     "Sid":"CodeforpoznanPlV2SES",
     "Effect":"Allow",
     "Action":["ses:SendEmail", "ses:SendRawEmail"],
-    "Resource":["${aws_ses_domain_identity.codeforpoznan_pl.arn}"]
+    "Resource":["${module.codeforpoznan_pl_mailing_identity.domain_identity.arn}"]
   }]
 }
   POLICY
+
+  depends_on = [
+    module.codeforpoznan_pl_mailing_identity.domain_identity,
+  ]
 }
 
 module codeforpoznan_pl_v2_serverless_api {
