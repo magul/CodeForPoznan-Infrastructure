@@ -14,7 +14,15 @@ module presentations_ssl_certificate {
 }
 
 module presentations_frontend_assets {
-  source          = "./frontend_assets"
+  source    = "./frontend_assets"
+
+  name      = "Presentations"
+  s3_bucket = aws_s3_bucket.codeforpoznan_public
+  iam_user  = aws_iam_user.presentations
+}
+
+module presentations_cloudfront_distribution {
+  source = "./cloudfront_distribution"
 
   name            = "Presentations"
   domain          = "slides.codeforpoznan.pl"
@@ -22,4 +30,12 @@ module presentations_frontend_assets {
   route53_zone    = aws_route53_zone.codeforpoznan_pl
   iam_user        = aws_iam_user.presentations
   acm_certificate = module.presentations_ssl_certificate.certificate
+
+  origins         = {
+    static_assets = {
+      default     = true
+      domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name
+      origin_path = "/Presentations"
+    }
+  }
 }

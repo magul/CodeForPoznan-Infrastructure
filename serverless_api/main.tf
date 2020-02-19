@@ -78,7 +78,7 @@ resource "aws_api_gateway_rest_api" "rest_api" {
   name = var.name
 }
 
-resource "aws_api_gateway_method" "method" {
+resource "aws_api_gateway_method" "root_method" {
   rest_api_id      = aws_api_gateway_rest_api.rest_api.id
   resource_id      = aws_api_gateway_rest_api.rest_api.root_resource_id
   http_method      = "ANY"
@@ -90,16 +90,48 @@ resource "aws_api_gateway_method" "method" {
   ]
 }
 
-resource "aws_api_gateway_integration" "integration" {
+resource "aws_api_gateway_integration" "root_integration" {
   rest_api_id             = aws_api_gateway_rest_api.rest_api.id
   resource_id             = aws_api_gateway_rest_api.rest_api.root_resource_id
-  http_method             = aws_api_gateway_method.method.http_method
+  http_method             = aws_api_gateway_method.root_method.http_method
   type                    = "AWS_PROXY"
   uri                     = aws_lambda_function.function.invoke_arn
   integration_http_method = "ANY"
 
   depends_on = [
-    aws_api_gateway_method.method,
+    aws_api_gateway_method.root_method,
+    aws_lambda_function.function,
+  ]
+}
+
+resource "aws_api_gateway_resource" "proxy_resource" {
+    rest_api_id = aws_api_gateway_rest_api.rest_api.id
+    parent_id = aws_api_gateway_rest_api.rest_api.root_resource_id
+    path_part = "{path+}"
+}
+
+resource "aws_api_gateway_method" "proxy_method" {
+  rest_api_id      = aws_api_gateway_rest_api.rest_api.id
+  resource_id      = aws_api_gateway_resource.proxy_resource.id
+  http_method      = "ANY"
+  authorization    = "NONE"
+  api_key_required = "false"
+
+  depends_on = [
+    aws_api_gateway_rest_api.rest_api,
+  ]
+}
+
+resource "aws_api_gateway_integration" "proxy_integration" {
+  rest_api_id             = aws_api_gateway_rest_api.rest_api.id
+  resource_id             = aws_api_gateway_resource.proxy_resource.id
+  http_method             = aws_api_gateway_method.proxy_method.http_method
+  type                    = "AWS_PROXY"
+  uri                     = aws_lambda_function.function.invoke_arn
+  integration_http_method = "ANY"
+
+  depends_on = [
+    aws_api_gateway_method.proxy_method,
     aws_lambda_function.function,
   ]
 }
@@ -109,7 +141,8 @@ resource "aws_api_gateway_deployment" "deployment" {
   stage_name = "devel"
 
   depends_on = [
-      aws_api_gateway_integration.integration,
+    aws_api_gateway_integration.root_integration,
+    aws_api_gateway_integration.proxy_integration,
   ]
 }
 
@@ -154,4 +187,8 @@ resource "aws_iam_user_policy_attachment" "user_policy_attachment" {
     aws_iam_policy.policy,
     var.iam_user,
   ]
+}
+
+output "deployment" {
+  value = aws_api_gateway_deployment.deployment
 }
