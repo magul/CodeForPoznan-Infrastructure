@@ -3,3 +3,9 @@ module "tomasz_magulski" {
 
   name   = "tomasz_magulski"
 }
+
+module "artur_tamborski" {
+  source = "./admin"
+
+  name   = "artur_tamborski"
+}
