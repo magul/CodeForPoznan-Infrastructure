@@ -10,8 +10,7 @@ resource "aws_iam_access_key" "access_key" {
   user = aws_iam_user.user.name
 }
 
-resource "aws_iam_policy_attachment" "policy_attachment" {
-  name       = "AdministratorAccess"
+resource "aws_iam_user_policy_attachment" "policy_attachment" {
   policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
-  users      = [aws_iam_user.user.name]
+  user       = aws_iam_user.user.name
 }
