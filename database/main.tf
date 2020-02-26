@@ -1,0 +1,55 @@
+variable "name" {
+  type = string
+}
+
+variable "db_instance" { }
+
+
+// https://github.com/hashicorp/terraform/issues/8367
+// before running terraform create a ssh tunel
+// ssh ubuntu@bastion.codeforpoznan.pl -L 15432:main-postgres.ct6cadodkpjm.eu-west-1.rds.amazonaws.com:5432
+provider "postgresql" {
+  host            = "127.0.0.1" // var.db_instance.address
+  port            = "15432"     // var.db_instance.port
+  username        = var.db_instance.username
+  password        = var.db_instance.password
+  sslmode         = "require"
+  connect_timeout = 15
+}
+
+provider "postgresql" {
+  alias   = "without_superuser"
+  host            = "127.0.0.1" // var.db_instance.address
+  port            = "15432"     // var.db_instance.port
+  username        = var.db_instance.username
+  password        = var.db_instance.password
+  sslmode         = "require"
+  connect_timeout = 15
+  superuser       = false
+}
+
+resource "random_password" "password" {
+  length  = 128
+  special = false
+}
+
+resource "postgresql_role" "user" {
+  provider = postgresql.without_superuser
+  name     = var.name
+  login    = true
+  password = random_password.password.result
+
+  depends_on = [
+    random_password.password,
+    var.db_instance,
+  ]
+}
+
+resource "postgresql_database" "database" {
+  name  = var.name
+  owner = postgresql_role.user.name
+
+  depends_on = [
+    postgresql_role.user,
+  ]
+}
