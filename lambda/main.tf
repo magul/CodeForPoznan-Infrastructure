@@ -11,6 +11,14 @@ variable user_can_invoke {
   type    = bool
   default = false
 }
+variable memory_size {
+  type    = number
+  default = 1024
+}
+variable timeout {
+  type    = number
+  default = 15
+}
 
 variable s3_bucket { }
 variable iam_user { }
@@ -84,12 +92,15 @@ resource "aws_s3_bucket_object" "bucket_object" {
 resource "aws_lambda_function" "function" {
   function_name = replace(var.name, ".", "_")
 
-  s3_bucket = var.s3_bucket.id
-  s3_key = aws_s3_bucket_object.bucket_object.key
+  s3_bucket   = var.s3_bucket.id
+  s3_key      = aws_s3_bucket_object.bucket_object.key
 
-  role = aws_iam_role.role.arn
-  handler = var.handler
-  runtime = var.runtime
+  role        = aws_iam_role.role.arn
+  handler     = var.handler
+  runtime     = var.runtime
+
+  memory_size = var.memory_size
+  timeout     = var.timeout
 
   vpc_config {
     subnet_ids = [
