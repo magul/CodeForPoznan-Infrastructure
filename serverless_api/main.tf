@@ -12,6 +12,7 @@ variable s3_bucket { }
 variable iam_user { }
 variable additional_policies {
   type = list
+  default = []
 }
 
 module lambda {

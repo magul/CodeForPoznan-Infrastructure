@@ -7,11 +7,28 @@ variable runtime {
 variable handler {
   type = string
 }
+variable user_can_invoke {
+  type    = bool
+  default = false
+}
 
 variable s3_bucket { }
 variable iam_user { }
 variable additional_policies {
-  type = list
+  type    = list
+  default = []
+}
+variable subnets {
+  type    = list
+  default = []
+}
+variable security_groups {
+  type    = list
+  default = []
+}
+variable envvars {
+  type    = map
+  default = {}
 }
 
 resource "aws_iam_role" "role" {
@@ -35,9 +52,15 @@ resource "aws_iam_role" "role" {
   POLICY
 }
 
-resource "aws_iam_role_policy_attachment" "role_policy_attachment" {
+resource "aws_iam_role_policy_attachment" "basic_role_policy_attachment" {
   role       = aws_iam_role.role.name
   policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaBasicExecutionRole"
+}
+
+resource "aws_iam_role_policy_attachment" "vpc_role_policy_attachment" {
+  role       = aws_iam_role.role.name
+  policy_arn = "arn:aws:iam::aws:policy/service-role/AWSLambdaENIManagementAccess"
+  count      = (length(var.subnets) * length(var.security_groups) != 0) ? 1 : 0
 }
 
 resource "aws_iam_role_policy_attachment" "additional_role_policy_attachment" {
@@ -51,7 +74,7 @@ resource "aws_s3_bucket_object" "bucket_object" {
   bucket         = var.s3_bucket.id
   key            = "${var.name}.zip"
   // small zip with emtpy index.js
-  content_base64 = "UEsDBAoAAAAAACykUFAAAAAAAAAAAAAAAAAIABwAaW5kZXguanNVVAkAAwSZSV4EmUledXgLAAEE6AMAAAToAwAAUEsBAh4DCgAAAAAALKRQUAAAAAAAAAAAAAAAAAgAGAAAAAAAAAAAAKSBAAAAAGluZGV4LmpzVVQFAAMEmUledXgLAAEE6AMAAAToAwAAUEsFBgAAAAABAAEATgAAAEIAAAAAAA=="
+  content_base64 = "UEsDBBQACAAIAER0W1AAAAAAAAAAABkAAAAIACAAaW5kZXguanNVVA0AB1DFV17Gx1deUMVXXnV4CwABBOgDAAAE6AMAAEsrzUsuyczPU8hIzEvJSS1S0NBUqFao5eICAFBLBwjKJk4ZGwAAABkAAABQSwECFAMUAAgACABEdFtQyiZOGRsAAAAZAAAACAAgAAAAAAAAAAAApIEAAAAAaW5kZXguanNVVA0AB1DFV17Gx1deUMVXXnV4CwABBOgDAAAE6AMAAFBLBQYAAAAAAQABAFYAAABxAAAAAAA="
 
   depends_on = [
     var.s3_bucket,
@@ -67,6 +90,25 @@ resource "aws_lambda_function" "function" {
   role = aws_iam_role.role.arn
   handler = var.handler
   runtime = var.runtime
+
+  vpc_config {
+    subnet_ids = [
+      for subnet in var.subnets:
+      subnet.id
+    ]
+    security_group_ids = [
+      for security_group in var.security_groups:
+      security_group.id
+    ]
+  }
+
+  dynamic "environment" {
+    for_each = (length(var.envvars) != 0) ? [1] : []
+
+    content {
+      variables = var.envvars
+    }
+  }
 
   depends_on = [
     aws_iam_role.role,
@@ -88,7 +130,7 @@ resource "aws_iam_policy" "policy" {
   }, {
     "Sid":"${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}Lambda",
     "Effect":"Allow",
-    "Action":["lambda:UpdateFunctionCode"],
+    "Action":["lambda:UpdateFunctionCode"%{ if var.user_can_invoke }, "lambda:InvokeFunction"%{endif}],
     "Resource":["${aws_lambda_function.function.arn}"]
   }]
 }

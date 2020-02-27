@@ -53,3 +53,15 @@ resource "postgresql_database" "database" {
     postgresql_role.user,
   ]
 }
+
+output "user" {
+  value = postgresql_role.user
+}
+
+output "database" {
+  value = postgresql_database.database
+}
+
+output "password" {
+  value = random_password.password
+}
