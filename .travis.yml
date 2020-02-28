@@ -1,8 +1,7 @@
 if: >-
+  branch = master        and
+  type   = pull_request  and
   repo   = 'CodeForPoznan/Infrastructure'
-
-env:
-  - TF_INPUT=false
 
 install:
 - |
