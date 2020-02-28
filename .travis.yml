@@ -1,21 +1,16 @@
+if: >-
+  repo   = 'CodeForPoznan/Infrastructure'
+
 env:
   - TF_INPUT=false
 
 install:
-  - |
-    cd /tmp
-    wget --quiet https://releases.hashicorp.com/terraform/0.12.21/terraform_0.12.21_linux_amd64.zip
-    unzip $(basename $_)
-    export PATH="$PATH:/tmp"
+- |
+  cd /tmp
+  wget --quiet https://releases.hashicorp.com/terraform/0.12.21/terraform_0.12.21_linux_amd64.zip
+  unzip $(basename $_)
+  export PATH="$PATH:/tmp"
 
 script:
-  - |
-    echo ">$TRAVIS_REPO_SLUG<"
-    echo ">$TRAVIS_PULL_REQUEST<"
-    echo ">$TRAVIS_BRANCH<"
-    [ "$TRAVIS_REPO_SLUG" = "CodeForPoznan/Infrastructure" ] || exit 0
-    [ "$TRAVIS_PULL_REQUEST" = "false" ] && exit 0  # exit if not a PR
-    [ "$TRAVIS_BRANCH" = "master" ] || exit 0 # exit if not for master
-
-    terraform validate
-    terraform fmt -check -recursive -diff
+- terraform validate
+- terraform fmt -check -recursive -diff
