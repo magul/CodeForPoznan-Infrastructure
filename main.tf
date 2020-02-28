@@ -41,8 +41,15 @@ resource "aws_s3_bucket" "codeforpoznan_public" {
     POLICY
 }
 
+// shared private bucket for storing zipped projects and lambdas code
 resource "aws_s3_bucket" "codeforpoznan_lambdas" {
   bucket = "codeforpoznan-lambdas"
+  acl    = "private"
+}
+
+// shared private bucket for storing terraform state in one place
+resource "aws_s3_bucket" "codeforpoznan_tfstate" {
+  bucket = "codeforpoznan-tfstate"
   acl    = "private"
 }
 
