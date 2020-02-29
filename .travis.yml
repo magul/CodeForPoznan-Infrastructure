@@ -12,5 +12,6 @@ install:
   popd
 
 script:
+- terraform init
 - terraform validate
 - terraform fmt -check -recursive -diff
