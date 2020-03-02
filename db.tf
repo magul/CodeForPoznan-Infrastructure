@@ -1,5 +1,5 @@
 resource "aws_db_subnet_group" "private" {
-  name       = "private"
+  name = "private"
   subnet_ids = [
     aws_subnet.private_a.id,
     aws_subnet.private_b.id,
@@ -13,16 +13,16 @@ resource "random_password" "db_password" {
 }
 
 resource "aws_db_instance" "db" {
-  identifier              = "main-postgres"
+  identifier = "main-postgres"
 
-  engine                  = "postgres"
-  engine_version          = "9.5"
+  engine         = "postgres"
+  engine_version = "9.5"
 
-  instance_class          = "db.t2.micro"
-  allocated_storage       = 8
+  instance_class    = "db.t2.micro"
+  allocated_storage = 8
 
-  username                = "postgres"
-  password                = random_password.db_password.result
+  username = "postgres"
+  password = random_password.db_password.result
 
   backup_retention_period = 7
   backup_window           = "03:00-04:00"

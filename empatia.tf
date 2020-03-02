@@ -34,14 +34,14 @@ resource "aws_route53_record" "soa_empatia" {
 }
 
 module empatia_ssl_certificate {
-  source       = "./ssl_certificate"
+  source = "./ssl_certificate"
 
   domain       = "bankempatii.pl"
   route53_zone = aws_route53_zone.empatia
 }
 
 module empatia_frontend_assets {
-  source    = "./frontend_assets"
+  source = "./frontend_assets"
 
   name      = "empatia"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
@@ -49,7 +49,7 @@ module empatia_frontend_assets {
 }
 
 module empatia_cloudfront_distribution {
-  source          = "./cloudfront_distribution"
+  source = "./cloudfront_distribution"
 
   name            = "empatia"
   domain          = "bankempatii.pl"
@@ -58,7 +58,7 @@ module empatia_cloudfront_distribution {
   iam_user        = aws_iam_user.empatia
   acm_certificate = module.empatia_ssl_certificate.certificate
 
-  origins         = {
+  origins = {
     static_assets = {
       default     = true
       domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name

@@ -3,11 +3,11 @@ resource "aws_security_group" "bastion" {
   vpc_id = aws_vpc.main.id
 
   ingress {
-    from_port   = 22
-    to_port     = 22
-    protocol    = "tcp"
+    from_port = 22
+    to_port   = 22
+    protocol  = "tcp"
     cidr_blocks = [
-        "0.0.0.0/0",
+      "0.0.0.0/0",
     ]
   }
 
@@ -23,24 +23,24 @@ data "template_cloudinit_config" "bastion" {
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-    content      = <<TEMPLATE
+    content = <<TEMPLATE
 ssh_authorized_keys:
-%{ for key in [
-  module.tomasz_magulski.public_key,
-  module.artur_tamborski.public_key
-] ~}
+%{for key in [
+    module.tomasz_magulski.public_key,
+    module.artur_tamborski.public_key
+]~}
   - ${key}
-%{ endfor ~}
+%{endfor~}
     TEMPLATE
-  }
+}
 }
 
 resource "aws_instance" "bastion" {
-  ami                     = "ami-035966e8adab4aaad" # Ubuntu 18.04 LTS in eu-west-1
-  instance_type           = "t2.nano"
-  subnet_id               = aws_subnet.public_a.id
-  user_data_base64        = data.template_cloudinit_config.bastion.rendered
-  vpc_security_group_ids  = [
+  ami              = "ami-035966e8adab4aaad" # Ubuntu 18.04 LTS in eu-west-1
+  instance_type    = "t2.nano"
+  subnet_id        = aws_subnet.public_a.id
+  user_data_base64 = data.template_cloudinit_config.bastion.rendered
+  vpc_security_group_ids = [
     aws_security_group.bastion.id,
     aws_default_security_group.main.id,
   ]
@@ -57,7 +57,7 @@ resource "aws_eip" "bastion" {
   instance                  = aws_instance.bastion.id
   associate_with_private_ip = aws_instance.bastion.private_ip
 
-  depends_on                = [
+  depends_on = [
     aws_internet_gateway.main,
     aws_instance.bastion,
   ]

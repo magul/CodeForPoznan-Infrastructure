@@ -4,15 +4,15 @@ variable name {
 variable domain {
   type = string
 }
-variable origins { }
+variable origins {}
 variable additional_cache_behaviors {
-  type = list
+  type    = list
   default = []
 }
-variable s3_bucket { }
-variable route53_zone { }
-variable iam_user { }
-variable acm_certificate { }
+variable s3_bucket {}
+variable route53_zone {}
+variable iam_user {}
+variable acm_certificate {}
 
 
 resource "aws_cloudfront_distribution" "distribution" {
@@ -46,7 +46,7 @@ resource "aws_cloudfront_distribution" "distribution" {
   default_cache_behavior {
     allowed_methods        = ["GET", "HEAD"]
     cached_methods         = ["GET", "HEAD"]
-    target_origin_id       = [for k, v in var.origins: k if lookup(v, "default", false)].0
+    target_origin_id       = [for k, v in var.origins : k if lookup(v, "default", false)].0
     viewer_protocol_policy = "redirect-to-https"
     min_ttl                = 0
     default_ttl            = 3600
@@ -113,7 +113,7 @@ resource "aws_route53_record" "main_record" {
 }
 
 resource "aws_iam_policy" "policy" {
-  name   = "${var.name}_cloudfront_distribution"
+  name = "${var.name}_cloudfront_distribution"
 
   policy = <<POLICY
 {

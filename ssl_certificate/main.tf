@@ -2,7 +2,7 @@ variable domain {
   type = string
 }
 
-variable route53_zone { }
+variable route53_zone {}
 
 provider "aws" {
   alias   = "north_virginia"

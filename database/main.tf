@@ -2,7 +2,7 @@ variable "name" {
   type = string
 }
 
-variable "db_instance" { }
+variable "db_instance" {}
 
 
 // https://github.com/hashicorp/terraform/issues/8367
@@ -18,7 +18,7 @@ provider "postgresql" {
 }
 
 provider "postgresql" {
-  alias   = "without_superuser"
+  alias           = "without_superuser"
   host            = "127.0.0.1" // var.db_instance.address
   port            = "15432"     // var.db_instance.port
   username        = var.db_instance.username
