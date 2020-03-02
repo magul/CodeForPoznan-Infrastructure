@@ -7,14 +7,14 @@ resource "aws_iam_access_key" "codeforpoznan_pl_v2" {
 }
 
 module codeforpoznan_pl_v2_ssl_certificate {
-  source       = "./ssl_certificate"
+  source = "./ssl_certificate"
 
   domain       = "codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
 module codeforpoznan_pl_v2_frontend_assets {
-  source    = "./frontend_assets"
+  source = "./frontend_assets"
 
   name      = "codeforpoznan.pl_v2"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
@@ -22,7 +22,7 @@ module codeforpoznan_pl_v2_frontend_assets {
 }
 
 module codeforpoznan_pl_mailing_identity {
-  source       = "./mailing_identity"
+  source = "./mailing_identity"
 
   domain       = "codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
@@ -49,7 +49,7 @@ resource "aws_iam_policy" "codeforpoznan_pl_ses_policy" {
 }
 
 module codeforpoznan_pl_v2_serverless_api {
-  source              = "./serverless_api"
+  source = "./serverless_api"
 
   name                = "codeforpoznan.pl_v2"
   runtime             = "nodejs10.x"
@@ -60,7 +60,7 @@ module codeforpoznan_pl_v2_serverless_api {
 }
 
 module codeforpoznan_pl_v2_cloudfront_distribution {
-  source          = "./cloudfront_distribution"
+  source = "./cloudfront_distribution"
 
   name            = "codeforpoznan.pl_v2"
   domain          = "codeforpoznan.pl"
@@ -69,7 +69,7 @@ module codeforpoznan_pl_v2_cloudfront_distribution {
   iam_user        = aws_iam_user.codeforpoznan_pl_v2
   acm_certificate = module.codeforpoznan_pl_v2_ssl_certificate.certificate
 
-  origins         = {
+  origins = {
     static_assets = {
       default     = true
       domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name
@@ -84,7 +84,7 @@ module codeforpoznan_pl_v2_cloudfront_distribution {
 
   additional_cache_behaviors = [
     {
-      path_pattern = "api/*"
+      path_pattern     = "api/*"
       target_origin_id = "api_gateway"
     }
   ]

@@ -7,7 +7,7 @@ resource "aws_iam_access_key" "dev_pah_fm" {
 }
 
 module dev_pah_fm_db {
-  source       = "./database"
+  source = "./database"
 
   name        = "dev_pah_fm"
   db_instance = aws_db_instance.db
@@ -19,7 +19,7 @@ resource "random_password" "secret_key" {
 }
 
 module dev_pah_fm_migration {
-  source          = "./lambda"
+  source = "./lambda"
 
   name            = "dev_pah_fm_migration"
   runtime         = "python3.6"
@@ -28,7 +28,7 @@ module dev_pah_fm_migration {
   iam_user        = aws_iam_user.dev_pah_fm
   user_can_invoke = true
 
-  subnets         = [
+  subnets = [
     aws_subnet.private_a,
     aws_subnet.private_b,
     aws_subnet.private_c,

@@ -8,15 +8,15 @@ variable handler {
   type = string
 }
 
-variable s3_bucket { }
-variable iam_user { }
+variable s3_bucket {}
+variable iam_user {}
 variable additional_policies {
-  type = list
+  type    = list
   default = []
 }
 
 module lambda {
-  source              = "../lambda"
+  source = "../lambda"
 
   name                = "${var.name}_serverless_api"
   runtime             = var.runtime
@@ -57,9 +57,9 @@ resource "aws_api_gateway_integration" "root_integration" {
 }
 
 resource "aws_api_gateway_resource" "proxy_resource" {
-    rest_api_id = aws_api_gateway_rest_api.rest_api.id
-    parent_id = aws_api_gateway_rest_api.rest_api.root_resource_id
-    path_part = "{path+}"
+  rest_api_id = aws_api_gateway_rest_api.rest_api.id
+  parent_id   = aws_api_gateway_rest_api.rest_api.root_resource_id
+  path_part   = "{path+}"
 }
 
 resource "aws_api_gateway_method" "proxy_method" {
@@ -90,7 +90,7 @@ resource "aws_api_gateway_integration" "proxy_integration" {
 
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
-  stage_name = "devel"
+  stage_name  = "devel"
 
   depends_on = [
     aws_api_gateway_integration.root_integration,

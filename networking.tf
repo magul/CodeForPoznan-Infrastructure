@@ -1,5 +1,5 @@
 resource "aws_vpc" "main" {
-    cidr_block = "172.31.0.0/16"
+  cidr_block = "172.31.0.0/16"
 }
 
 resource "aws_subnet" "public_a" {
@@ -126,11 +126,11 @@ resource "aws_default_security_group" "main" {
   }
 
   egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
+    from_port = 0
+    to_port   = 0
+    protocol  = "-1"
     cidr_blocks = [
-        "0.0.0.0/0",
+      "0.0.0.0/0",
     ]
   }
 }
@@ -150,8 +150,8 @@ resource "aws_security_group_rule" "main_egress" {
   from_port         = 0
   to_port           = 0
   protocol          = "-1"
-  cidr_blocks       = [
-      "0.0.0.0/0",
+  cidr_blocks = [
+    "0.0.0.0/0",
   ]
 }
 

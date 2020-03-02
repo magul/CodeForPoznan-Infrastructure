@@ -2,7 +2,7 @@ variable domain {
   type = string
 }
 
-variable route53_zone { }
+variable route53_zone {}
 
 resource "aws_ses_domain_identity" "domain_identity" {
   domain = var.domain

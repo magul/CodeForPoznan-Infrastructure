@@ -2,8 +2,8 @@ variable name {
   type = string
 }
 
-variable s3_bucket { }
-variable iam_user { }
+variable s3_bucket {}
+variable iam_user {}
 
 resource "aws_s3_bucket_object" "bucket_object" {
   bucket = var.s3_bucket.id
@@ -15,7 +15,7 @@ resource "aws_s3_bucket_object" "bucket_object" {
 }
 
 resource "aws_iam_policy" "policy" {
-  name   = "${var.name}_frontend_assets"
+  name = "${var.name}_frontend_assets"
 
   policy = <<POLICY
 {
