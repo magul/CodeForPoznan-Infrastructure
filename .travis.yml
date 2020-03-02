@@ -1,15 +1,10 @@
-if: >-
-  branch = master        and
-  type   = pull_request  and
-  repo   = 'CodeForPoznan/Infrastructure'
-
 install:
-- |
-  pushd /tmp
-  wget --quiet https://releases.hashicorp.com/terraform/0.12.21/terraform_0.12.21_linux_amd64.zip
-  unzip $(basename $_)
-  export PATH="$PATH:$PWD"
-  popd
+  - |
+    pushd /tmp
+    wget --quiet https://releases.hashicorp.com/terraform/0.12.21/terraform_0.12.21_linux_amd64.zip
+    unzip $(basename $_)
+    export PATH="$PATH:$PWD"
+    popd
 
 script:
-- terraform fmt -check -recursive -diff
+  - terraform fmt -check -recursive -diff
