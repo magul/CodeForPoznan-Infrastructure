@@ -64,5 +64,17 @@ module alinka_website_cloudfront_distribution {
       domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name
       origin_path = "/alinka_website"
     }
+    google_form = {
+      domain_name   = "docs.google.com"
+      origin_path   = ""
+      custom_origin = true
+    }
   }
+
+  additional_cache_behaviors = [
+    {
+      path_pattern     = "forms/*"
+      target_origin_id = "google_form"
+    }
+  ]
 }

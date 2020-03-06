@@ -35,6 +35,15 @@ resource "aws_cloudfront_distribution" "distribution" {
         }
       }
 
+      dynamic "custom_header" {
+        for_each = lookup(origin.value, "custom_headers", [])
+
+        content {
+          name  = custom_header.value.name
+          value = custom_header.value.value
+        }
+      }
+
     }
   }
 
