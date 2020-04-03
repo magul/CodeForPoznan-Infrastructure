@@ -48,8 +48,31 @@ resource "aws_route53_record" "txt_codeforpoznan_pl" {
     # https://support.google.com/a/answer/6149686?hl=en&ref_topic=4487770
     "google-site-verification=vEPDPgTFVgeXWQz0ty-fgtOEKowH44Ko8MtyDHTUHRc",
 
-    # that will be a subject of change in CodeForPoznan/Infrastructure#4
-    "v=spf1 a:codeforpoznan.pl mx:codeforpoznan.pl -all",
+    # https://support.google.com/a/answer/60764
+    # https://docs.aws.amazon.com/ses/latest/DeveloperGuide/send-email-authentication-spf.html
+    "v=spf1 include:_spf.google.com include:amazonses.com ~all",
+  ]
+}
+
+# https://support.google.com/a/answer/174126
+resource "aws_route53_record" "dkim_google" {
+  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
+  name    = "google._domainkey.codeforpoznan.pl"
+  type    = "TXT"
+  ttl     = "300"
+  records = [
+    "v=DKIM1; k=rsa; p=MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAnscwqK6IZsq+HPxYzLD46THJ/LYD5Pocv67zg2QJYW040zgAkDVAyYaBgNtS6mNkifWgQtpcMn5x0DfjezBf8rzPUmbXP54TjVwgc8JEqa4d5RUDO6JCvE046KNWdHMmKpia/wm2sAS80cX\"\"9+jD8eVoOkQBT01Dt8TJsisrC5gvncNpFHk1Hl254fHc/njn7opWMTMIu1i9xSzjtttR37SnxCtI7xKecG7MtjFHpG5W98C8EefI71t5BKve+AmirGVSrNyedraVbX9JQ8S0tCwnM27+/KqFDpalV9smKkBY/m/Aewm1m7OJHnqxiwDW6/w8f3CjU1dbF/LLSYABnOQIDAQAB",
+  ]
+}
+
+# https://support.google.com/a/answer/2466563
+resource "aws_route53_record" "dmarc" {
+  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
+  name    = "_dmarc.codeforpoznan.pl"
+  type    = "TXT"
+  ttl     = "300"
+  records = [
+    "v=DMARC1; p=reject; rua=mailto:hello@codeforpoznan.pl; pct=100"
   ]
 }
 
@@ -61,38 +84,5 @@ resource "aws_route53_record" "www_codeforpoznan_pl" {
   ttl     = "300"
   records = [
     "codeforpoznan.pl.",
-  ]
-}
-
-# all records below will be subjects of change in CodeForPoznan/Infrastructure#4
-# meaning that they could be probably created/defined by more sophisticated process
-# using https://www.terraform.io/docs/providers/aws/r/ses_domain_dkim.html
-resource "aws_route53_record" "dolmrntuhbbqc5lz3n77zqwkf6sru4yz_dkim" {
-  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
-  name    = "dolmrntuhbbqc5lz3n77zqwkf6sru4yz._domainkey.codeforpoznan.pl."
-  type    = "CNAME"
-  ttl     = "300"
-  records = [
-    "dolmrntuhbbqc5lz3n77zqwkf6sru4yz.dkim.amazonses.com.",
-  ]
-}
-
-resource "aws_route53_record" "fwbmtvvkzjecoehe2gi4bdwowllq3n7q_dkim" {
-  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
-  name    = "fwbmtvvkzjecoehe2gi4bdwowllq3n7q._domainkey.codeforpoznan.pl."
-  type    = "CNAME"
-  ttl     = "300"
-  records = [
-    "fwbmtvvkzjecoehe2gi4bdwowllq3n7q.dkim.amazonses.com.",
-  ]
-}
-
-resource "aws_route53_record" "zp6muzfpymdcij4o7vdjcrm2bfpioouw_dkim" {
-  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
-  name    = "zp6muzfpymdcij4o7vdjcrm2bfpioouw._domainkey.codeforpoznan.pl."
-  type    = "CNAME"
-  ttl     = "300"
-  records = [
-    "zp6muzfpymdcij4o7vdjcrm2bfpioouw.dkim.amazonses.com.",
   ]
 }
