@@ -52,8 +52,3 @@ resource "aws_s3_bucket" "codeforpoznan_tfstate" {
   bucket = "codeforpoznan-tfstate"
   acl    = "private"
 }
-
-// DNS zone for codeforpoznan.pl
-resource "aws_route53_zone" "codeforpoznan_pl" {
-  name = "codeforpoznan.pl"
-}
