@@ -60,7 +60,7 @@ module dev_pah_fm_serverless_api {
 
   name                = "dev_pah_fm"
   runtime             = "python3.6"
-  handler             = "pah_fm.wsgi.handler"
+  handler             = "handlers.api"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
   iam_user            = aws_iam_user.dev_pah_fm
 
