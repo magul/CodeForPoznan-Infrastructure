@@ -47,3 +47,51 @@ module dev_pah_fm_migration {
     SECRET_KEY     = random_password.secret_key.result
   }
 }
+
+module dev_pah_fm_ssl_certificate {
+  source = "./ssl_certificate"
+
+  domain = "dev.pahfm.codeforpoznan.pl"
+  route53_zone = aws_route53_zone.codeforpoznan_pl
+}
+
+module dev_pah_fm_serverless_api {
+  source = "./serverless_api"
+
+  name                = "dev_pah_fm"
+  runtime             = "python3.6"
+  handler             = "pah_fm.wsgi.application"
+  s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
+  iam_user            = aws_iam_user.dev_pah_fm
+}
+
+module dev_pah_fm_cloudfront_distribution {
+  source = "./cloudfront_distribution"
+
+  name            = "dev_pah_fm"
+  domain          = "dev.pahfm.codeforpoznan.pl"
+  s3_bucket       = aws_s3_bucket.codeforpoznan_public
+  route53_zone    = aws_route53_zone.codeforpoznan_pl
+  iam_user        = aws_iam_user.dev_pah_fm
+  acm_certificate = module.dev_pah_fm_ssl_certificate.certificate
+
+  origins = {
+    static_assets = {
+      default     = true
+      domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name
+      origin_path = "/dev_pah_fm"
+    }
+    api_gateway = {
+      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.deployment.invoke_url).hostname
+      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.deployment.invoke_url).path
+      custom_origin = true
+    }
+  }
+
+  additional_cache_behaviors = [
+    {
+      path_pattern     = "api/*"
+      target_origin_id = "api_gateway"
+    }
+  ]
+}
