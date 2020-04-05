@@ -7,6 +7,10 @@ variable runtime {
 variable handler {
   type = string
 }
+variable envvars {
+  type    = map
+  default = {}
+}
 
 variable s3_bucket {}
 variable iam_user {}
@@ -24,6 +28,7 @@ module lambda {
   additional_policies = var.additional_policies
   s3_bucket           = var.s3_bucket
   iam_user            = var.iam_user
+  envvars             = var.envvars
 }
 
 resource "aws_api_gateway_rest_api" "rest_api" {
