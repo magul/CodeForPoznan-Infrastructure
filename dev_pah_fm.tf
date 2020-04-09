@@ -51,26 +51,28 @@ module dev_pah_fm_migration {
 module dev_pah_fm_ssl_certificate {
   source = "./ssl_certificate"
 
-  domain = "dev.pahfm.codeforpoznan.pl"
+  domain       = "dev.pahfm.codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
 module dev_pah_fm_serverless_api {
   source = "./serverless_api"
 
-  name                = "dev_pah_fm"
-  runtime             = "python3.6"
-  handler             = "handlers.api"
-  s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user            = aws_iam_user.dev_pah_fm
+  name      = "dev_pah_fm"
+  runtime   = "python3.6"
+  handler   = "handlers.api"
+  s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
+  iam_user  = aws_iam_user.dev_pah_fm
 
   envvars = {
-    PAH_FM_DB_USER = module.dev_pah_fm_db.user.name
-    PAH_FM_DB_NAME = module.dev_pah_fm_db.database.name
-    PAH_FM_DB_PASS = module.dev_pah_fm_db.password.result
-    PAH_FM_DB_HOST = aws_db_instance.db.address
-    BASE_URL       = "dev.pahfm.codeforpoznan.pl"
-    SECRET_KEY     = random_password.secret_key.result
+    PAH_FM_DB_USER        = module.dev_pah_fm_db.user.name
+    PAH_FM_DB_NAME        = module.dev_pah_fm_db.database.name
+    PAH_FM_DB_PASS        = module.dev_pah_fm_db.password.result
+    PAH_FM_DB_HOST        = aws_db_instance.db.address
+    BASE_URL              = "dev.pahfm.codeforpoznan.pl"
+    SECRET_KEY            = random_password.secret_key.result
+    API_GATEWAY_BASE_PATH = "/devel"
+    STRIP_STAGE_PATH      = "yes"
   }
 }
 
@@ -99,7 +101,11 @@ module dev_pah_fm_cloudfront_distribution {
 
   additional_cache_behaviors = [
     {
-      path_pattern     = "api/*"
+      path_pattern     = "static/*"
+      target_origin_id = "static_assets"
+    },
+    {
+      path_pattern     = "*"
       target_origin_id = "api_gateway"
     }
   ]
