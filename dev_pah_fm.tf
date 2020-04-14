@@ -71,7 +71,6 @@ module dev_pah_fm_serverless_api {
     PAH_FM_DB_HOST        = aws_db_instance.db.address
     BASE_URL              = "dev.pahfm.codeforpoznan.pl"
     SECRET_KEY            = random_password.secret_key.result
-    API_GATEWAY_BASE_PATH = "/devel"
     STRIP_STAGE_PATH      = "yes"
   }
 }
