@@ -101,12 +101,16 @@ module dev_pah_fm_cloudfront_distribution {
 
   additional_cache_behaviors = [
     {
-      path_pattern     = "static/*"
-      target_origin_id = "static_assets"
+      path_pattern     = "api/*"
+      target_origin_id = "api_gateway"
+    },
+    {
+      path_pattern     = "admin/*"
+      target_origin_id = "api_gateway"
     },
     {
       path_pattern     = "*"
-      target_origin_id = "api_gateway"
+      target_origin_id = "static_assets"
     }
   ]
 }
