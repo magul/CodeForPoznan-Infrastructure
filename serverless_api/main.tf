@@ -53,7 +53,7 @@ resource "aws_api_gateway_integration" "root_integration" {
   http_method             = aws_api_gateway_method.root_method.http_method
   type                    = "AWS_PROXY"
   uri                     = module.lambda.function.invoke_arn
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
 
   depends_on = [
     aws_api_gateway_method.root_method,
@@ -85,7 +85,7 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   http_method             = aws_api_gateway_method.proxy_method.http_method
   type                    = "AWS_PROXY"
   uri                     = module.lambda.function.invoke_arn
-  integration_http_method = "ANY"
+  integration_http_method = "POST"
 
   depends_on = [
     aws_api_gateway_method.proxy_method,
