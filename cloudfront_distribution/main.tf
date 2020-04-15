@@ -81,6 +81,7 @@ resource "aws_cloudfront_distribution" "distribution" {
       target_origin_id       = ordered_cache_behavior.value.target_origin_id
       forwarded_values {
         query_string = true
+        headers = lookup(ordered_cache_behavior.value, "headers", [])
         cookies {
           forward = "all"
         }

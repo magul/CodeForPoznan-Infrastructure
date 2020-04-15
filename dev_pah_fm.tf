@@ -102,14 +102,17 @@ module dev_pah_fm_cloudfront_distribution {
     {
       path_pattern     = "api/*"
       target_origin_id = "api_gateway"
+      headers          = ["X-Forwarded-Host"]
     },
     {
       path_pattern     = "admin/*"
       target_origin_id = "api_gateway"
+      headers          = ["X-Forwarded-Host"]
     },
     {
       path_pattern     = "*"
       target_origin_id = "static_assets"
+      headers          = []
     }
   ]
 }
