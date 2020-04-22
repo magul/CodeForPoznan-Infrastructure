@@ -65,13 +65,13 @@ module dev_pah_fm_serverless_api {
   iam_user  = aws_iam_user.dev_pah_fm
 
   envvars = {
-    PAH_FM_DB_USER        = module.dev_pah_fm_db.user.name
-    PAH_FM_DB_NAME        = module.dev_pah_fm_db.database.name
-    PAH_FM_DB_PASS        = module.dev_pah_fm_db.password.result
-    PAH_FM_DB_HOST        = aws_db_instance.db.address
-    BASE_URL              = "dev.pahfm.codeforpoznan.pl"
-    SECRET_KEY            = random_password.secret_key.result
-    STRIP_STAGE_PATH      = "yes"
+    PAH_FM_DB_USER   = module.dev_pah_fm_db.user.name
+    PAH_FM_DB_NAME   = module.dev_pah_fm_db.database.name
+    PAH_FM_DB_PASS   = module.dev_pah_fm_db.password.result
+    PAH_FM_DB_HOST   = aws_db_instance.db.address
+    BASE_URL         = "dev.pahfm.codeforpoznan.pl"
+    SECRET_KEY       = random_password.secret_key.result
+    STRIP_STAGE_PATH = "yes"
   }
 }
 
@@ -102,12 +102,12 @@ module dev_pah_fm_cloudfront_distribution {
     {
       path_pattern     = "api/*"
       target_origin_id = "api_gateway"
-      headers          = ["X-Forwarded-Host"]
+      headers          = ["X-Forwarded-Host", "Referer", "Cookie"]
     },
     {
       path_pattern     = "admin/*"
       target_origin_id = "api_gateway"
-      headers          = ["X-Forwarded-Host"]
+      headers          = ["X-Forwarded-Host", "Referer", "Cookie"]
     },
     {
       path_pattern     = "*"

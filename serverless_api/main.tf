@@ -74,8 +74,9 @@ resource "aws_api_gateway_method" "proxy_method" {
   authorization    = "NONE"
   api_key_required = "false"
 
-  request_parameters      = {
-    "method.request.header.Host" = true
+  request_parameters = {
+    "method.request.header.Referer" = true
+    "method.request.header.Host"    = true
   }
 
   depends_on = [
@@ -91,7 +92,8 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   type                    = "AWS_PROXY"
   integration_http_method = "POST"
 
-  request_parameters      = {
+  request_parameters = {
+    "integration.request.header.Referer"          = "method.request.header.Referer"
     "integration.request.header.X-Forwarded-Host" = "method.request.header.Host"
   }
 
