@@ -9,6 +9,11 @@ variable additional_cache_behaviors {
   type    = list
   default = []
 }
+variable custom_error_responses {
+  type    = list
+  default = []
+}
+
 variable s3_bucket {}
 variable route53_zone {}
 variable iam_user {}
@@ -86,6 +91,17 @@ resource "aws_cloudfront_distribution" "distribution" {
           forward = "all"
         }
       }
+    }
+  }
+
+  dynamic "custom_error_response" {
+    for_each = var.custom_error_responses
+
+    content {
+      error_caching_min_ttl = lookup(custom_error_response.value, "error_caching_min_ttl", 300)
+      error_code            = custom_error_response.value.error_code
+      response_code         = lookup(custom_error_response.value, "response_code", 200)
+      response_page_path    = lookup(custom_error_response.value, "response_page_path", "/index.html")
     }
   }
 

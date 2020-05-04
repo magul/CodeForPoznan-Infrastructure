@@ -102,17 +102,25 @@ module dev_pah_fm_cloudfront_distribution {
     {
       path_pattern     = "api/*"
       target_origin_id = "api_gateway"
-      headers          = ["X-Forwarded-Host", "Referer", "Cookie"]
+      headers          = ["Referer"]
     },
     {
       path_pattern     = "admin/*"
       target_origin_id = "api_gateway"
-      headers          = ["X-Forwarded-Host", "Referer", "Cookie"]
+      headers          = ["Referer"]
     },
     {
       path_pattern     = "*"
       target_origin_id = "static_assets"
       headers          = []
+    }
+  ]
+
+  custom_error_responses = [
+    {
+      error_code            = 404
+      response_code         = 200
+      response_page_path    = "/index.html"
     }
   ]
 }
