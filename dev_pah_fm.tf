@@ -64,6 +64,16 @@ module dev_pah_fm_serverless_api {
   s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
   iam_user  = aws_iam_user.dev_pah_fm
 
+  subnets = [
+    aws_subnet.private_a,
+    aws_subnet.private_b,
+    aws_subnet.private_c,
+  ]
+
+  security_groups = [
+    aws_default_security_group.main
+  ]
+
   envvars = {
     PAH_FM_DB_USER   = module.dev_pah_fm_db.user.name
     PAH_FM_DB_NAME   = module.dev_pah_fm_db.database.name

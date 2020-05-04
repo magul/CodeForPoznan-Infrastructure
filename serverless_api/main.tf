@@ -7,6 +7,14 @@ variable runtime {
 variable handler {
   type = string
 }
+variable subnets {
+  type    = list
+  default = []
+}
+variable security_groups {
+  type    = list
+  default = []
+}
 variable envvars {
   type    = map
   default = {}
@@ -28,6 +36,8 @@ module lambda {
   additional_policies = var.additional_policies
   s3_bucket           = var.s3_bucket
   iam_user            = var.iam_user
+  subnets             = var.subnets
+  security_groups     = var.security_groups
   envvars             = var.envvars
 }
 
