@@ -84,12 +84,6 @@ resource "aws_api_gateway_method" "proxy_method" {
   authorization    = "NONE"
   api_key_required = "false"
 
-  request_parameters = {
-    "method.request.header.Authorization" = true
-    "method.request.header.Referer"       = true
-    "method.request.header.Host"          = true
-  }
-
   depends_on = [
     aws_api_gateway_rest_api.rest_api,
   ]
@@ -102,12 +96,6 @@ resource "aws_api_gateway_integration" "proxy_integration" {
   uri                     = module.lambda.function.invoke_arn
   type                    = "AWS_PROXY"
   integration_http_method = "POST"
-
-  request_parameters = {
-    "integration.request.header.Authorization"    = "method.request.header.Authorization"
-    "integration.request.header.Referer"          = "method.request.header.Referer"
-    "integration.request.header.X-Forwarded-Host" = "method.request.header.Host"
-  }
 
   depends_on = [
     aws_api_gateway_method.proxy_method,
