@@ -55,6 +55,14 @@ module dev_pah_fm_ssl_certificate {
   route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
+module dev_pah_fm_frontend_assets {
+  source = "./frontend_assets"
+
+  name      = "dev_pah_fm"
+  s3_bucket = aws_s3_bucket.codeforpoznan_public
+  iam_user  = aws_iam_user.dev_pah_fm
+}
+
 module dev_pah_fm_serverless_api {
   source = "./serverless_api"
 
