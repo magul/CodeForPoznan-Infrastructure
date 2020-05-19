@@ -13,7 +13,7 @@ module dev_codeforpoznan_pl_v3_db {
   db_instance = aws_db_instance.db
 }
 
-resource "random_password" "secret_key" {
+resource "random_password" "dev_codeforpoznan_pl_v3_secret_key" {
   length  = 50
   special = false
 }
