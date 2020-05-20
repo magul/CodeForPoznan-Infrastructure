@@ -13,7 +13,7 @@ module dev_pah_fm_db {
   db_instance = aws_db_instance.db
 }
 
-resource "random_password" "secret_key" {
+resource "random_password" "dev_pah_fm_secret_key" {
   length  = 50
   special = false
 }
@@ -44,7 +44,7 @@ module dev_pah_fm_migration {
     PAH_FM_DB_PASS = module.dev_pah_fm_db.password.result
     PAH_FM_DB_HOST = aws_db_instance.db.address
     BASE_URL       = "dev.pahfm.codeforpoznan.pl"
-    SECRET_KEY     = random_password.secret_key.result
+    SECRET_KEY     = random_password.dev_pah_fm_secret_key.result
   }
 }
 
@@ -88,7 +88,7 @@ module dev_pah_fm_serverless_api {
     PAH_FM_DB_PASS   = module.dev_pah_fm_db.password.result
     PAH_FM_DB_HOST   = aws_db_instance.db.address
     BASE_URL         = "dev.pahfm.codeforpoznan.pl"
-    SECRET_KEY       = random_password.secret_key.result
+    SECRET_KEY       = random_password.dev_pah_fm_secret_key.result
     STRIP_STAGE_PATH = "yes"
   }
 }
