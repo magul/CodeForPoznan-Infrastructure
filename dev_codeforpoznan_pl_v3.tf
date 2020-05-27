@@ -44,7 +44,7 @@ module dev_codeforpoznan_pl_v3_migration {
     DB_PASSWORD = module.dev_codeforpoznan_pl_v3_db.password.result
     DB_HOST     = aws_db_instance.db.address
     BASE_URL    = "dev.codeforpoznan.pl"
-    SECRET_KEY  = random_password.secret_key.result
+    SECRET_KEY  = random_password.dev_codeforpoznan_pl_v3_secret_key.result
   }
 }
 
@@ -88,7 +88,7 @@ module dev_codeforpoznan_pl_v3_serverless_api {
     DB_PASSWORD      = module.dev_codeforpoznan_pl_v3_db.password.result
     DB_HOST          = aws_db_instance.db.address
     BASE_URL         = "dev.codeforpoznan.pl"
-    SECRET_KEY       = random_password.secret_key.result
+    SECRET_KEY       = random_password.dev_codeforpoznan_pl_v3_secret_key.result
     STRIP_STAGE_PATH = "yes"
   }
 }
