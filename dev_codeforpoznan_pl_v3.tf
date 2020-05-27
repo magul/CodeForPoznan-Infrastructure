@@ -21,7 +21,7 @@ resource "random_password" "dev_codeforpoznan_pl_v3_secret_key" {
 module dev_codeforpoznan_pl_v3_migration {
   source = "./lambda"
 
-  name            = "dev_codeforpoznan_pl_v3_migration"
+  name            = "dev_codeforpoznan_pl_v3"
   runtime         = "python3.8"
   handler         = "handlers.migration"
   s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
@@ -66,7 +66,7 @@ module dev_codeforpoznan_pl_v3_frontend_assets {
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
-  name      = "dev_codeforpoznan_pl_v3_serverless_api"
+  name      = "dev_codeforpoznan_pl"
   runtime   = "python3.8"
   handler   = "handlers.serverless_api"
   s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
