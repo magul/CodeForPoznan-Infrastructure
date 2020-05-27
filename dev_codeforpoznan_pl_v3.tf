@@ -66,11 +66,11 @@ module dev_codeforpoznan_pl_v3_frontend_assets {
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
-  name            = "dev_codeforpoznan_pl_v3_serverless_api"
-  runtime         = "python3.8"
-  handler         = "handlers.serverless_api"
-  s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user        = aws_iam_user.dev_codeforpoznan_pl_v3
+  name      = "dev_codeforpoznan_pl_v3_serverless_api"
+  runtime   = "python3.8"
+  handler   = "handlers.serverless_api"
+  s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
+  iam_user  = aws_iam_user.dev_codeforpoznan_pl_v3
 
   subnets = [
     aws_subnet.private_a,
