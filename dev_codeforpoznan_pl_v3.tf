@@ -63,14 +63,39 @@ module dev_codeforpoznan_pl_v3_frontend_assets {
   iam_user  = aws_iam_user.dev_codeforpoznan_pl_v3
 }
 
+module dev_codeforpoznan_pl_v3_mailing_identity {
+  source = "./mailing_identity"
+
+  domain       = "dev.codeforpoznan.pl"
+  route53_zone = aws_route53_zone.codeforpoznan_pl
+}
+
+data "aws_iam_policy_document" "dev_codeforpoznan_pl_v3_ses_policy" {
+  version = "2012-10-17"
+
+  statement {
+    sid       = "dev_codeforpoznan_pl_v3_ses_policy"
+    effect    = "Allow"
+    actions   = ["ses:SendEmail", "ses:SendRawEmail"]
+    resources = [module.dev_codeforpoznan_pl_v3_mailing_identity.domain_identity.arn]
+  }
+}
+
+resource "aws_iam_policy" "dev_codeforpoznan_pl_v3_ses_policy" {
+  name       = "dev_codeforpoznan_pl_v3_ses_policy"
+  policy     = data.aws_iam_policy_document.dev_codeforpoznan_pl_v3_ses_policy.json
+  depends_on = [module.dev_codeforpoznan_pl_v3_mailing_identity.domain_identity]
+}
+
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
-  name      = "dev_codeforpoznan_pl"
-  runtime   = "python3.8"
-  handler   = "handlers.serverless_api"
-  s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user  = aws_iam_user.dev_codeforpoznan_pl_v3
+  name                = "dev_codeforpoznan_pl_v3"
+  runtime             = "python3.8"
+  handler             = "handlers.serverless_api"
+  s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
+  iam_user            = aws_iam_user.dev_codeforpoznan_pl_v3
+  additional_policies = [aws_iam_policy.dev_codeforpoznan_pl_v3_ses_policy]
 
   subnets = [
     aws_subnet.private_a,
