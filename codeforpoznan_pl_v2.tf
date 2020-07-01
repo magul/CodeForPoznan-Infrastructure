@@ -1,9 +1,7 @@
-resource "aws_iam_user" "codeforpoznan_pl_v2" {
-  name = "codeforpoznan_pl_v2"
-}
+module codeforpoznan_pl_v2_user {
+  source = "./user"
 
-resource "aws_iam_access_key" "codeforpoznan_pl_v2" {
-  user = aws_iam_user.codeforpoznan_pl_v2.name
+  name = "codeforpoznan_pl_v2"
 }
 
 module codeforpoznan_pl_v2_ssl_certificate {
@@ -18,7 +16,7 @@ module codeforpoznan_pl_v2_frontend_assets {
 
   name      = "codeforpoznan.pl_v2"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.codeforpoznan_pl_v2
+  iam_user  = module.codeforpoznan_pl_v2_user.user
 }
 
 module codeforpoznan_pl_mailing_identity {
@@ -55,7 +53,7 @@ module codeforpoznan_pl_v2_serverless_api {
   runtime             = "nodejs10.x"
   handler             = "contact_me.handler"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user            = aws_iam_user.codeforpoznan_pl_v2
+  iam_user            = module.codeforpoznan_pl_v2_user.user
   additional_policies = [aws_iam_policy.codeforpoznan_pl_ses_policy]
 }
 
@@ -66,7 +64,7 @@ module codeforpoznan_pl_v2_cloudfront_distribution {
   domain          = "codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
-  iam_user        = aws_iam_user.codeforpoznan_pl_v2
+  iam_user        = module.codeforpoznan_pl_v2_user.user
   acm_certificate = module.codeforpoznan_pl_v2_ssl_certificate.certificate
 
   origins = {

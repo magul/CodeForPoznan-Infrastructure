@@ -1,10 +1,9 @@
-resource "aws_iam_user" "dev_pah_fm" {
+module dev_pah_fm_user {
+  source = "./user"
+
   name = "dev_pah_fm"
 }
 
-resource "aws_iam_access_key" "dev_pah_fm" {
-  user = aws_iam_user.dev_pah_fm.name
-}
 
 module dev_pah_fm_db {
   source = "./database"
@@ -25,7 +24,7 @@ module dev_pah_fm_migration {
   runtime         = "python3.6"
   handler         = "handlers.migration"
   s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user        = aws_iam_user.dev_pah_fm
+  iam_user        = module.dev_pah_fm_user.user
   user_can_invoke = true
 
   subnets = [
@@ -60,7 +59,7 @@ module dev_pah_fm_frontend_assets {
 
   name      = "dev_pah_fm"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.dev_pah_fm
+  iam_user  = module.dev_pah_fm_user.user
 }
 
 module dev_pah_fm_serverless_api {
@@ -70,7 +69,7 @@ module dev_pah_fm_serverless_api {
   runtime   = "python3.6"
   handler   = "handlers.api"
   s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user  = aws_iam_user.dev_pah_fm
+  iam_user  = module.dev_pah_fm_user.user
 
   subnets = [
     aws_subnet.private_a,
@@ -100,7 +99,7 @@ module dev_pah_fm_cloudfront_distribution {
   domain          = "dev.pahfm.codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
-  iam_user        = aws_iam_user.dev_pah_fm
+  iam_user        = module.dev_pah_fm_user.user
   acm_certificate = module.dev_pah_fm_ssl_certificate.certificate
 
   origins = {
