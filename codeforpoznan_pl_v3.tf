@@ -1,9 +1,7 @@
-resource "aws_iam_user" "codeforpoznan_pl_v3" {
-  name = "codeforpoznan_pl_v3"
-}
+module codeforpoznan_pl_v3_user {
+  source = "./user"
 
-resource "aws_iam_access_key" "codeforpoznan_pl_v3" {
-  user = aws_iam_user.codeforpoznan_pl_v3.name
+  name = "codeforpoznan_pl_v3"
 }
 
 module codeforpoznan_pl_v3_ssl_certificate {
@@ -18,7 +16,7 @@ module codeforpoznan_pl_v3_frontend_assets {
 
   name      = "codeforpoznan.pl_v3"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.codeforpoznan_pl_v3
+  iam_user  = module.codeforpoznan_pl_v3_user.user
 }
 
 module codeforpoznan_pl_v3_cloudfront_distribution {
@@ -28,7 +26,7 @@ module codeforpoznan_pl_v3_cloudfront_distribution {
   domain          = "dev.codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
-  iam_user        = aws_iam_user.codeforpoznan_pl_v3
+  iam_user        = module.codeforpoznan_pl_v3_user.user
   acm_certificate = module.codeforpoznan_pl_v3_ssl_certificate.certificate
 
   origins = {

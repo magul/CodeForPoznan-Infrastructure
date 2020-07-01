@@ -12,6 +12,32 @@ provider "aws" {
   profile = "codeforpoznan"
 }
 
+data "aws_iam_policy_document" "codeforpoznan_public_policy" {
+  version = "2012-10-17"
+
+  statement {
+    sid    = "PublicListBucket"
+    effect = "Allow"
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::codeforpoznan-public"]
+  }
+
+  statement {
+    sid    = "PublicGetObject"
+    effect = "Allow"
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::codeforpoznan-public/*"]
+  }
+}
+
 // shared public bucket (we will push here all static assets in separate directories)
 resource "aws_s3_bucket" "codeforpoznan_public" {
   bucket = "codeforpoznan-public"
@@ -21,24 +47,7 @@ resource "aws_s3_bucket" "codeforpoznan_public" {
     allowed_origins = ["*"]
   }
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-    "Sid":"PublicListBucket",
-    "Effect":"Allow",
-    "Principal": "*",
-    "Action":["s3:ListBucket"],
-    "Resource":["arn:aws:s3:::codeforpoznan-public"]
-  }, {
-    "Sid":"PublicGetObject",
-    "Effect":"Allow",
-    "Principal": "*",
-    "Action":["s3:GetObject"],
-    "Resource":["arn:aws:s3:::codeforpoznan-public/*"]
-  }]
-}
-    POLICY
+  policy = data.aws_iam_policy_document.codeforpoznan_public_policy.json
 }
 
 // shared private bucket for storing zipped projects and lambdas code

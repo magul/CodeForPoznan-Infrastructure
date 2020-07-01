@@ -1,9 +1,7 @@
-resource "aws_iam_user" "presentations" {
-  name = "presentations"
-}
+module presentations_user {
+  source = "./user"
 
-resource "aws_iam_access_key" "presentations" {
-  user = aws_iam_user.presentations.name
+  name = "presentations"
 }
 
 module presentations_ssl_certificate {
@@ -18,7 +16,7 @@ module presentations_frontend_assets {
 
   name      = "Presentations"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.presentations
+  iam_user  = module.presentations_user.user
 }
 
 module presentations_cloudfront_distribution {
@@ -28,7 +26,7 @@ module presentations_cloudfront_distribution {
   domain          = "slides.codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
-  iam_user        = aws_iam_user.presentations
+  iam_user        = module.presentations_user.user
   acm_certificate = module.presentations_ssl_certificate.certificate
 
   origins = {

@@ -138,20 +138,20 @@ resource "aws_route53_record" "main_record" {
   ]
 }
 
-resource "aws_iam_policy" "policy" {
-  name = "${var.name}_cloudfront_distribution"
+data "aws_iam_policy_document" "policy" {
+  version = "2012-10-17"
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-    "Sid":"${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}CloudFront",
-    "Effect":"Allow",
-    "Action":["cloudfront:CreateInvalidation"],
-    "Resource":["${aws_cloudfront_distribution.distribution.arn}"]
-  }]
+  statement {
+    sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}CloudFront"
+    effect    = "Allow"
+    actions   = ["cloudfront:CreateInvalidation"]
+    resources = [aws_cloudfront_distribution.distribution.arn]
+  }
 }
-  POLICY
+
+resource "aws_iam_policy" "policy" {
+  name   = "${var.name}_cloudfront_distribution"
+  policy = data.aws_iam_policy_document.policy.json
 
   depends_on = [
     aws_cloudfront_distribution.distribution,

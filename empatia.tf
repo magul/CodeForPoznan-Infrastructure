@@ -1,9 +1,7 @@
-resource "aws_iam_user" "empatia" {
-  name = "empatia"
-}
+module empatia_user {
+  source = "./user"
 
-resource "aws_iam_access_key" "empatia" {
-  user = aws_iam_user.empatia.name
+  name = "empatia"
 }
 
 resource "aws_route53_zone" "empatia" {
@@ -45,7 +43,7 @@ module empatia_frontend_assets {
 
   name      = "empatia"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.empatia
+  iam_user  = module.empatia_user.user
 }
 
 module empatia_cloudfront_distribution {
@@ -55,7 +53,7 @@ module empatia_cloudfront_distribution {
   domain          = "bankempatii.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.empatia
-  iam_user        = aws_iam_user.empatia
+  iam_user        = module.empatia_user.user
   acm_certificate = module.empatia_ssl_certificate.certificate
 
   origins = {

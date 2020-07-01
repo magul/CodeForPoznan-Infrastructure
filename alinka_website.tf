@@ -1,9 +1,7 @@
-resource "aws_iam_user" "alinka_website" {
-  name = "alinka_website"
-}
+module alinka_website_user {
+  source = "./user"
 
-resource "aws_iam_access_key" "alinka_website" {
-  user = aws_iam_user.alinka_website.name
+  name = "alinka_website"
 }
 
 resource "aws_route53_zone" "alinka_website" {
@@ -45,7 +43,7 @@ module alinka_website_frontend_assets {
 
   name      = "alinka_website"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.alinka_website
+  iam_user  = module.alinka_website_user.user
 }
 
 module alinka_website_cloudfront_distribution {
@@ -55,7 +53,7 @@ module alinka_website_cloudfront_distribution {
   domain          = "alinka.io"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.alinka_website
-  iam_user        = aws_iam_user.alinka_website
+  iam_user        = module.alinka_website_user.user
   acm_certificate = module.alinka_website_ssl_certificate.certificate
 
   origins = {
