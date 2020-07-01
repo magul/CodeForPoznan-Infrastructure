@@ -39,25 +39,23 @@ variable envvars {
   default = {}
 }
 
+data "aws_iam_policy_document" "role" {
+  version = "2012-10-17"
+
+  statement {
+    sid     = ""
+    effect  = "Allow"
+    actions = ["sts:AssumeRole"]
+    principals {
+      type        = "Service"
+      identifiers = ["lambda.amazonaws.com"]
+    }
+  }
+}
+
 resource "aws_iam_role" "role" {
   name               = var.name
-  assume_role_policy = <<POLICY
-{
-  "Version": "2012-10-17",
-  "Statement": [
-    {
-      "Action": "sts:AssumeRole",
-      "Principal": {
-        "Service": [
-            "lambda.amazonaws.com"
-        ]
-      },
-      "Effect": "Allow",
-      "Sid": ""
-    }
-  ]
-}
-  POLICY
+  assume_role_policy = data.aws_iam_policy_document.role.json
 }
 
 resource "aws_iam_role_policy_attachment" "basic_role_policy_attachment" {
@@ -127,25 +125,27 @@ resource "aws_lambda_function" "function" {
   ]
 }
 
-resource "aws_iam_policy" "policy" {
-  name = var.name
+data "aws_iam_policy_document" "policy" {
+  version = "2012-10-17"
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-    "Sid":"${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3",
-    "Effect":"Allow",
-    "Action":["s3:GetObject", "s3:PutObject"],
-    "Resource":["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}"]
-  }, {
-    "Sid":"${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}Lambda",
-    "Effect":"Allow",
-    "Action":["lambda:UpdateFunctionCode"%{if var.user_can_invoke}, "lambda:InvokeFunction"%{endif}],
-    "Resource":["${aws_lambda_function.function.arn}"]
-  }]
+  statement {
+    sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3"
+    effect    = "Allow"
+    actions   = ["s3:GetObject", "s3:PutObject"]
+    resources = ["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}"]
+  }
+
+  statement {
+    sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}Lambda"
+    effect    = "Allow"
+    actions   = var.user_can_invoke ? ["lambda:UpdateFunctionCode", "lambda:InvokeFunction"] : ["lambda:UpdateFunctionCode"]
+    resources = [aws_lambda_function.function.arn]
+  }
 }
-  POLICY
+
+resource "aws_iam_policy" "policy" {
+  name   = var.name
+  policy = data.aws_iam_policy_document.policy.json
 
   depends_on = [
     aws_s3_bucket_object.bucket_object,

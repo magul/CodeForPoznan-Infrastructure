@@ -14,20 +14,20 @@ resource "aws_s3_bucket_object" "bucket_object" {
   ]
 }
 
-resource "aws_iam_policy" "policy" {
-  name = "${var.name}_frontend_assets"
+data "aws_iam_policy_document" "policy" {
+  version = "2012-10-17"
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-    "Sid":"${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3",
-    "Effect":"Allow",
-    "Action":["s3:DeleteObject", "s3:PutObject"],
-    "Resource":["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}*"]
-  }]
+  statement {
+    sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3"
+    effect    = "Allow"
+    actions   = ["s3:DeleteObject", "s3:PutObject"]
+    resources = ["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}*"]
+  }
 }
-  POLICY
+
+resource "aws_iam_policy" "policy" {
+  name   = "${var.name}_frontend_assets"
+  policy = data.aws_iam_policy_document.policy.json
 
   depends_on = [
     aws_s3_bucket_object.bucket_object,

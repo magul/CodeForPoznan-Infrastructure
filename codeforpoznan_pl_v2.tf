@@ -26,20 +26,25 @@ module codeforpoznan_pl_mailing_identity {
   route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
-resource "aws_iam_policy" "codeforpoznan_pl_ses_policy" {
-  name = "codeforpoznan_pl_v2_lambda_execution_policy"
+data "aws_iam_policy_document" "codeforpoznan_pl_ses_policy" {
+  version = "2012-10-17"
 
-  policy = <<POLICY
-{
-  "Version":"2012-10-17",
-  "Statement":[{
-    "Sid":"CodeforpoznanPlV2SES",
-    "Effect":"Allow",
-    "Action":["ses:SendEmail", "ses:SendRawEmail"],
-    "Resource":["${module.codeforpoznan_pl_mailing_identity.domain_identity.arn}"]
-  }]
+  statement {
+    sid    = "CodeforpoznanPlV2SES"
+    effect = "Allow"
+    actions = [
+      "ses:SendEmail",
+      "ses:SendRawEmail",
+    ]
+    resources = [
+      module.codeforpoznan_pl_mailing_identity.domain_identity.arn
+    ]
+  }
 }
-  POLICY
+
+resource "aws_iam_policy" "codeforpoznan_pl_ses_policy" {
+  name   = "codeforpoznan_pl_v2_lambda_execution_policy"
+  policy = data.aws_iam_policy_document.codeforpoznan_pl_ses_policy.json
 
   depends_on = [
     module.codeforpoznan_pl_mailing_identity.domain_identity,
