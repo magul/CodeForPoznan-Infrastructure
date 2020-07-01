@@ -1,9 +1,11 @@
-resource "aws_iam_user" "dev_codeforpoznan_pl_v3" {
+module dev_codeforpoznan_pl_v3_user {
+  source = "./user"
+
   name = "dev_codeforpoznan_pl_v3"
 }
 
 resource "aws_iam_access_key" "dev_codeforpoznan_pl_v3" {
-  user = aws_iam_user.dev_codeforpoznan_pl_v3.name
+  user = module.dev_codeforpoznan_pl_v3_user.user
 }
 
 module dev_codeforpoznan_pl_v3_db {
@@ -21,11 +23,11 @@ resource "random_password" "dev_codeforpoznan_pl_v3_secret_key" {
 module dev_codeforpoznan_pl_v3_migration {
   source = "./lambda"
 
-  name            = "dev_codeforpoznan_pl_v3"
+  name            = "dev_codeforpoznan_pl_v3_migration"
   runtime         = "python3.8"
   handler         = "handlers.migration"
   s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user        = aws_iam_user.dev_codeforpoznan_pl_v3
+  iam_user        = module.dev_codeforpoznan_pl_v3_user.user
   user_can_invoke = true
 
   subnets = [
@@ -60,7 +62,7 @@ module dev_codeforpoznan_pl_v3_frontend_assets {
 
   name      = "dev_codeforpoznan.pl_v3"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
-  iam_user  = aws_iam_user.dev_codeforpoznan_pl_v3
+  iam_user  = module.dev_codeforpoznan_pl_v3_user.user
 }
 
 module dev_codeforpoznan_pl_v3_mailing_identity {
@@ -90,11 +92,11 @@ resource "aws_iam_policy" "dev_codeforpoznan_pl_v3_ses_policy" {
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
-  name                = "dev_codeforpoznan_pl_v3"
+  name                = "dev_codeforpoznan_pl_v3_serverless_api"
   runtime             = "python3.8"
   handler             = "handlers.serverless_api"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
-  iam_user            = aws_iam_user.dev_codeforpoznan_pl_v3
+  iam_user            = module.dev_codeforpoznan_pl_v3_user.user
   additional_policies = [aws_iam_policy.dev_codeforpoznan_pl_v3_ses_policy]
 
   subnets = [
@@ -125,7 +127,7 @@ module dev_codeforpoznan_pl_v3_cloudfront_distribution {
   domain          = "dev.codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
-  iam_user        = aws_iam_user.dev_codeforpoznan_pl_v3
+  iam_user        = module.dev_codeforpoznan_pl_v3_user.user
   acm_certificate = module.dev_codeforpoznan_pl_v3_ssl_certificate.certificate
 
   origins = {
