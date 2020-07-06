@@ -56,7 +56,7 @@ module dev_codeforpoznan_pl_v3_ssl_certificate {
 module dev_codeforpoznan_pl_v3_frontend_assets {
   source = "./frontend_assets"
 
-  name      = "dev_codeforpoznan.pl_v3"
+  name      = "dev_codeforpoznan_pl_v3"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
   iam_user  = module.dev_codeforpoznan_pl_v3_user.user
 }
@@ -88,7 +88,7 @@ resource "aws_iam_policy" "dev_codeforpoznan_pl_v3_ses_policy" {
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
-  name                = "dev_codeforpoznan_pl_v3_serverless_api"
+  name                = "dev_codeforpoznan_pl_v3"
   runtime             = "python3.8"
   handler             = "handlers.serverless_api"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
@@ -119,7 +119,7 @@ module dev_codeforpoznan_pl_v3_serverless_api {
 module dev_codeforpoznan_pl_v3_cloudfront_distribution {
   source = "./cloudfront_distribution"
 
-  name            = "dev_codeforpoznan.pl_v3"
+  name            = "dev_codeforpoznan_pl_v3"
   domain          = "dev.codeforpoznan.pl"
   s3_bucket       = aws_s3_bucket.codeforpoznan_public
   route53_zone    = aws_route53_zone.codeforpoznan_pl
@@ -130,7 +130,7 @@ module dev_codeforpoznan_pl_v3_cloudfront_distribution {
     static_assets = {
       default     = true
       domain_name = aws_s3_bucket.codeforpoznan_public.bucket_domain_name
-      origin_path = "/dev_codeforpoznan.pl_v3"
+      origin_path = "/dev_codeforpoznan_pl_v3"
     }
     api_gateway = {
       domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_codeforpoznan_pl_v3_serverless_api.deployment.invoke_url).hostname
