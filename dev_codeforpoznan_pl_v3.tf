@@ -4,10 +4,6 @@ module dev_codeforpoznan_pl_v3_user {
   name = "dev_codeforpoznan_pl_v3"
 }
 
-resource "aws_iam_access_key" "dev_codeforpoznan_pl_v3" {
-  user = module.dev_codeforpoznan_pl_v3_user.user
-}
-
 module dev_codeforpoznan_pl_v3_db {
   source = "./database"
 
