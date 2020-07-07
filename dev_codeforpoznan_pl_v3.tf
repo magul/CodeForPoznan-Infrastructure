@@ -51,12 +51,16 @@ module dev_codeforpoznan_pl_v3_ssl_certificate {
 
   domain       = "dev.codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module dev_codeforpoznan_pl_v3_frontend_assets {
   source = "./frontend_assets"
 
-  name      = "dev_codeforpoznan_pl_v3"
+  name      = "codeforpoznan.pl_v3"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
   iam_user  = module.dev_codeforpoznan_pl_v3_user.user
 }
@@ -72,7 +76,7 @@ data "aws_iam_policy_document" "dev_codeforpoznan_pl_v3_ses_policy" {
   version = "2012-10-17"
 
   statement {
-    sid       = "dev_codeforpoznan_pl_v3_ses_policy"
+    sid       = "DevCodeforpoznanPlV3SES"
     effect    = "Allow"
     actions   = ["ses:SendEmail", "ses:SendRawEmail"]
     resources = [module.dev_codeforpoznan_pl_v3_mailing_identity.domain_identity.arn]
