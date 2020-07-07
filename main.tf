@@ -12,6 +12,38 @@ provider "aws" {
   profile = "codeforpoznan"
 }
 
+provider "aws" {
+  region  = "us-east-1"
+  profile = "codeforpoznan"
+  alias   = "north_virginia"
+}
+
+data "aws_iam_policy_document" "codeforpoznan_public_policy" {
+  version = "2012-10-17"
+
+  statement {
+    sid    = "PublicListBucket"
+    effect = "Allow"
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+    actions   = ["s3:ListBucket"]
+    resources = ["arn:aws:s3:::codeforpoznan-public"]
+  }
+
+  statement {
+    sid    = "PublicGetObject"
+    effect = "Allow"
+    principals {
+      identifiers = ["*"]
+      type        = "*"
+    }
+    actions   = ["s3:GetObject"]
+    resources = ["arn:aws:s3:::codeforpoznan-public/*"]
+  }
+}
+
 data "aws_iam_policy_document" "codeforpoznan_public_policy" {
   version = "2012-10-17"
 

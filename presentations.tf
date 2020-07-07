@@ -9,6 +9,10 @@ module presentations_ssl_certificate {
 
   domain       = "slides.codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module presentations_frontend_assets {

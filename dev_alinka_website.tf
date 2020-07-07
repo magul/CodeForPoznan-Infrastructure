@@ -9,6 +9,10 @@ module dev_alinka_website_ssl_certificate {
 
   domain       = "dev.alinka.io"
   route53_zone = aws_route53_zone.alinka_website
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module dev_alinka_website_frontend_assets {
