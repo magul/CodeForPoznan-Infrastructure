@@ -60,7 +60,7 @@ module dev_codeforpoznan_pl_v3_ssl_certificate {
 module dev_codeforpoznan_pl_v3_frontend_assets {
   source = "./frontend_assets"
 
-  name      = "codeforpoznan.pl_v3"
+  name      = "dev_codeforpoznan_pl_v3"
   s3_bucket = aws_s3_bucket.codeforpoznan_public
   iam_user  = module.dev_codeforpoznan_pl_v3_user.user
 }
