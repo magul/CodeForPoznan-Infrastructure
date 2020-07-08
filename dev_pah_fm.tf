@@ -52,6 +52,10 @@ module dev_pah_fm_ssl_certificate {
 
   domain       = "dev.pahfm.codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module dev_pah_fm_frontend_assets {

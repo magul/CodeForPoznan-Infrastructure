@@ -5,9 +5,7 @@ variable domain {
 variable route53_zone {}
 
 provider "aws" {
-  alias   = "north_virginia"
-  region  = "us-east-1"
-  profile = "codeforpoznan"
+  alias = "north_virginia"
 }
 
 resource "aws_acm_certificate" "certificate" {

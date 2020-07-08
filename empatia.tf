@@ -36,6 +36,10 @@ module empatia_ssl_certificate {
 
   domain       = "bankempatii.pl"
   route53_zone = aws_route53_zone.empatia
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module empatia_frontend_assets {

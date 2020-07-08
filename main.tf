@@ -12,6 +12,12 @@ provider "aws" {
   profile = "codeforpoznan"
 }
 
+provider "aws" {
+  region  = "us-east-1"
+  profile = "codeforpoznan"
+  alias   = "north_virginia"
+}
+
 data "aws_iam_policy_document" "codeforpoznan_public_policy" {
   version = "2012-10-17"
 

@@ -9,6 +9,10 @@ module codeforpoznan_pl_v2_ssl_certificate {
 
   domain       = "codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
 }
 
 module codeforpoznan_pl_v2_frontend_assets {
