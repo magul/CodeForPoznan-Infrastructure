@@ -21,7 +21,7 @@ module dev_codeforpoznan_pl_v3_migration {
 
   name            = "dev_codeforpoznan_pl_v3_migration"
   runtime         = "python3.8"
-  handler         = "codeforpoznan.handlers.migration"
+  handler         = "backend.handlers.migration"
   s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
   iam_user        = module.dev_codeforpoznan_pl_v3_user.user
   user_can_invoke = true
@@ -94,7 +94,7 @@ module dev_codeforpoznan_pl_v3_serverless_api {
 
   name                = "dev_codeforpoznan_pl_v3"
   runtime             = "python3.8"
-  handler             = "codeforpoznan.handlers.api"
+  handler             = "backend.handlers.api"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
   iam_user            = module.dev_codeforpoznan_pl_v3_user.user
   additional_policies = [aws_iam_policy.dev_codeforpoznan_pl_v3_ses_policy]
