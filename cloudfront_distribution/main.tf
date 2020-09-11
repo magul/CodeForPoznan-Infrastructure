@@ -83,7 +83,10 @@ resource "aws_cloudfront_distribution" "distribution" {
       cached_methods         = lookup(ordered_cache_behavior.value, "cached_methods", ["HEAD", "GET"])
       path_pattern           = ordered_cache_behavior.value.path_pattern
       viewer_protocol_policy = lookup(ordered_cache_behavior.value, "protocol_policy", "redirect-to-https")
+      max_ttl                = lookup(ordered_cache_behavior.value, "max_ttl", 31536000)
+      default_ttl            = lookup(ordered_cache_behavior.value, "default_ttl", 86400)
       target_origin_id       = ordered_cache_behavior.value.target_origin_id
+
       forwarded_values {
         query_string = true
         headers      = lookup(ordered_cache_behavior.value, "headers", [])

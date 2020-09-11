@@ -148,6 +148,8 @@ module dev_codeforpoznan_pl_v3_cloudfront_distribution {
       path_pattern     = "api/*"
       target_origin_id = "api_gateway"
       headers          = ["Authorization"]
+      max_ttl          = 0
+      default_ttl      = 0
     }
   ]
 
