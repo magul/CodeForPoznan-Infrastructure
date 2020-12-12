@@ -124,11 +124,15 @@ module dev_pah_fm_cloudfront_distribution {
       path_pattern     = "api/*"
       target_origin_id = "api_gateway"
       headers          = ["Authorization"]
+      max_ttl          = 0
+      default_ttl      = 0
     },
     {
       path_pattern     = "admin/*"
       target_origin_id = "api_gateway"
       headers          = ["Referer"]
+      max_ttl          = 0
+      default_ttl      = 0
     }
   ]
 
