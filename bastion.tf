@@ -27,7 +27,8 @@ data "template_cloudinit_config" "bastion" {
 ssh_authorized_keys:
 %{for key in [
     module.tomasz_magulski.public_key,
-    module.artur_tamborski.public_key
+    module.artur_tamborski.public_key,
+    module.wojciech_patelka.public_key,
 ]~}
   - ${key}
 %{endfor~}
