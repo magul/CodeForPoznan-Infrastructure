@@ -16,10 +16,11 @@ locals {
     DB_PASSWORD = module.dev_codeforpoznan_pl_v3_db.password.result
 
     # mail
-    MAIL_SERVER   = "email-smtp.eu-west-1.amazonaws.com"
-    MAIL_PORT     = 587
-    MAIL_USERNAME = module.dev_codeforpoznan_pl_v3_user.access_key.id
-    MAIL_PASSWORD = module.dev_codeforpoznan_pl_v3_user.access_key.ses_smtp_password_v4
+    MAIL_SERVER        = "email-smtp.eu-west-1.amazonaws.com"
+    MAIL_PORT          = 587
+    MAIL_USERNAME      = module.dev_codeforpoznan_pl_v3_user.access_key.id
+    MAIL_PASSWORD      = module.dev_codeforpoznan_pl_v3_user.access_key.ses_smtp_password_v4
+    MAIL_SUPPRESS_SEND = "FALSE"
   }
 }
 
