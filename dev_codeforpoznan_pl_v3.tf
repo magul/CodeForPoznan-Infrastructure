@@ -4,7 +4,7 @@ locals {
     STRIP_STAGE_PATH = "yes"
 
     # app
-    FLASK_ENV  = "development"
+    FLASK_ENV  = "staging"
     BASE_URL   = "dev.codeforpoznan.pl"
     SECRET_KEY = random_password.dev_codeforpoznan_pl_v3_secret_key.result
 
