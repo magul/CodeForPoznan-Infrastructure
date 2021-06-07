@@ -59,7 +59,7 @@ module codeforpoznan_pl_v2_serverless_api {
   source = "./serverless_api"
 
   name                = "codeforpoznan.pl_v2"
-  runtime             = "nodejs10.x"
+  runtime             = "nodejs14.x"
   handler             = "contact_me.handler"
   s3_bucket           = aws_s3_bucket.codeforpoznan_lambdas
   iam_user            = module.codeforpoznan_pl_v2_user.user
