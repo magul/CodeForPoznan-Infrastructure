@@ -110,7 +110,7 @@ resource "aws_iam_policy" "dev_codeforpoznan_pl_v3_ses_policy" {
 
 resource "aws_iam_user_policy_attachment" "dev_codeforpoznan_pl_v3_ses_policy_attachment" {
   policy_arn = aws_iam_policy.dev_codeforpoznan_pl_v3_ses_policy.arn
-  user = module.dev_codeforpoznan_pl_v3_user.user.name
+  user       = module.dev_codeforpoznan_pl_v3_user.user.name
 }
 
 module dev_codeforpoznan_pl_v3_serverless_api {
