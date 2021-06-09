@@ -1,3 +1,29 @@
+locals {
+  envvars = {
+    # needed for serverless
+    STRIP_STAGE_PATH = "yes"
+
+    # app
+    FLASK_ENV  = "staging"
+    BASE_URL   = "dev.codeforpoznan.pl"
+    SECRET_KEY = random_password.dev_codeforpoznan_pl_v3_secret_key.result
+
+    # db
+    DB_HOST     = aws_db_instance.db.address
+    DB_PORT     = aws_db_instance.db.port
+    DB_NAME     = module.dev_codeforpoznan_pl_v3_db.database.name
+    DB_USER     = module.dev_codeforpoznan_pl_v3_db.user.name
+    DB_PASSWORD = module.dev_codeforpoznan_pl_v3_db.password.result
+
+    # mail
+    MAIL_SERVER        = "email-smtp.eu-west-1.amazonaws.com"
+    MAIL_PORT          = 587
+    MAIL_USERNAME      = module.dev_codeforpoznan_pl_v3_user.access_key.id
+    MAIL_PASSWORD      = module.dev_codeforpoznan_pl_v3_user.access_key.ses_smtp_password_v4
+    MAIL_SUPPRESS_SEND = "FALSE"
+  }
+}
+
 module dev_codeforpoznan_pl_v3_user {
   source = "./user"
 
@@ -36,14 +62,7 @@ module dev_codeforpoznan_pl_v3_migration {
     aws_default_security_group.main
   ]
 
-  envvars = {
-    DB_USER     = module.dev_codeforpoznan_pl_v3_db.user.name
-    DB_NAME     = module.dev_codeforpoznan_pl_v3_db.database.name
-    DB_PASSWORD = module.dev_codeforpoznan_pl_v3_db.password.result
-    DB_HOST     = aws_db_instance.db.address
-    BASE_URL    = "dev.codeforpoznan.pl"
-    SECRET_KEY  = random_password.dev_codeforpoznan_pl_v3_secret_key.result
-  }
+  envvars = local.envvars
 }
 
 module dev_codeforpoznan_pl_v3_ssl_certificate {
@@ -89,6 +108,11 @@ resource "aws_iam_policy" "dev_codeforpoznan_pl_v3_ses_policy" {
   depends_on = [module.dev_codeforpoznan_pl_v3_mailing_identity.domain_identity]
 }
 
+resource "aws_iam_user_policy_attachment" "dev_codeforpoznan_pl_v3_ses_policy_attachment" {
+  policy_arn = aws_iam_policy.dev_codeforpoznan_pl_v3_ses_policy.arn
+  user       = module.dev_codeforpoznan_pl_v3_user.user.name
+}
+
 module dev_codeforpoznan_pl_v3_serverless_api {
   source = "./serverless_api"
 
@@ -109,15 +133,7 @@ module dev_codeforpoznan_pl_v3_serverless_api {
     aws_default_security_group.main
   ]
 
-  envvars = {
-    DB_USER          = module.dev_codeforpoznan_pl_v3_db.user.name
-    DB_NAME          = module.dev_codeforpoznan_pl_v3_db.database.name
-    DB_PASSWORD      = module.dev_codeforpoznan_pl_v3_db.password.result
-    DB_HOST          = aws_db_instance.db.address
-    BASE_URL         = "dev.codeforpoznan.pl"
-    SECRET_KEY       = random_password.dev_codeforpoznan_pl_v3_secret_key.result
-    STRIP_STAGE_PATH = "yes"
-  }
+  envvars = local.envvars
 }
 
 module dev_codeforpoznan_pl_v3_cloudfront_distribution {

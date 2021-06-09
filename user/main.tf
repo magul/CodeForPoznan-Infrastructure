@@ -13,3 +13,7 @@ resource "aws_iam_access_key" "access_key" {
 output "user" {
   value = aws_iam_user.user
 }
+
+output "access_key" {
+  value = aws_iam_access_key.access_key
+}
