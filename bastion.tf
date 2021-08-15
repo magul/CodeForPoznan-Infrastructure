@@ -38,10 +38,7 @@ package_update: true
 
 bootcmd:
   - sysctl -w net.ipv4.ip_forward=1
-  - iptables -t nat -A POSTROUTING -j MASQUERADE
-
-runcmd:
-  - echo $(hostname -I) $(hostname) >> /etc/hosts
+  - iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
 
 ssh_authorized_keys:
 %{for key in local.authorized_keys~}
