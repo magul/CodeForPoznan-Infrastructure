@@ -54,6 +54,17 @@ resource "aws_route53_record" "txt_codeforpoznan_pl" {
   ]
 }
 
+# https://github.com/CodeForPoznan/Community/issues/72
+resource "aws_route53_record" "txt_github_codeforpoznan_pl" {
+  zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
+  name    = "_github-challenge-CodeForPoznan-organization.codeforpoznan.pl"
+  type    = "TXT"
+  ttl     = "300"
+  records = [
+    "c929b5936d"
+  ]
+}
+
 # https://support.google.com/a/answer/174126
 resource "aws_route53_record" "dkim_google" {
   zone_id = aws_route53_zone.codeforpoznan_pl.zone_id
