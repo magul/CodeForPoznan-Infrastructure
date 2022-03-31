@@ -86,3 +86,21 @@ resource "aws_route53_record" "www_codeforpoznan_pl" {
     "codeforpoznan.pl.",
   ]
 }
+
+module "codeforpoznan_pl_ssl_certificate" {
+  source = "./ssl_certificate"
+
+  domain       = "codeforpoznan.pl"
+  route53_zone = aws_route53_zone.codeforpoznan_pl
+
+  providers = {
+    aws.north_virginia = aws.north_virginia
+  }
+}
+
+module "codeforpoznan_pl_mailing_identity" {
+  source = "./mailing_identity"
+
+  domain       = "codeforpoznan.pl"
+  route53_zone = aws_route53_zone.codeforpoznan_pl
+}
