@@ -21,6 +21,8 @@ locals {
     MAIL_USERNAME      = module.codeforpoznan_pl_v3_user.access_key.id
     MAIL_PASSWORD      = module.codeforpoznan_pl_v3_user.access_key.ses_smtp_password_v4
     MAIL_SUPPRESS_SEND = "FALSE"
+
+    # test
   }
 }
 
