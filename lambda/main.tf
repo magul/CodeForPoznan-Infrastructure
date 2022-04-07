@@ -1,41 +1,41 @@
-variable name {
+variable "name" {
   type = string
 }
-variable runtime {
+variable "runtime" {
   type = string
 }
-variable handler {
+variable "handler" {
   type = string
 }
-variable user_can_invoke {
+variable "user_can_invoke" {
   type    = bool
   default = false
 }
-variable memory_size {
+variable "memory_size" {
   type    = number
   default = 1024
 }
-variable timeout {
+variable "timeout" {
   type    = number
   default = 15
 }
 
-variable s3_bucket {}
-variable iam_user {}
-variable additional_policies {
-  type    = list
+variable "s3_bucket" {}
+variable "iam_user" {}
+variable "additional_policies" {
+  type    = list(any)
   default = []
 }
-variable subnets {
-  type    = list
+variable "subnets" {
+  type    = list(any)
   default = []
 }
-variable security_groups {
-  type    = list
+variable "security_groups" {
+  type    = list(any)
   default = []
 }
-variable envvars {
-  type    = map
+variable "envvars" {
+  type    = map(any)
   default = {}
 }
 
@@ -163,5 +163,6 @@ resource "aws_iam_user_policy_attachment" "user_policy_attachment" {
 }
 
 output "function" {
-  value = aws_lambda_function.function
+  value     = aws_lambda_function.function
+  sensitive = true
 }

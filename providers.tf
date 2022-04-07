@@ -16,6 +16,7 @@ terraform {
       version = "~> 2.70.1"
       # version = "~> 4.8.0"
       # version = "~> 2.36.0"
+      configuration_aliases = [aws.north_virginia]
     }
     random = {
       source  = "hashicorp/random"

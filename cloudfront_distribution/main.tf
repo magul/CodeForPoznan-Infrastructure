@@ -1,23 +1,23 @@
-variable name {
+variable "name" {
   type = string
 }
-variable domain {
+variable "domain" {
   type = string
 }
-variable origins {}
-variable additional_cache_behaviors {
-  type    = list
+variable "origins" {}
+variable "additional_cache_behaviors" {
+  type    = list(any)
   default = []
 }
-variable custom_error_responses {
-  type    = list
+variable "custom_error_responses" {
+  type    = list(any)
   default = []
 }
 
-variable s3_bucket {}
-variable route53_zone {}
-variable iam_user {}
-variable acm_certificate {}
+variable "s3_bucket" {}
+variable "route53_zone" {}
+variable "iam_user" {}
+variable "acm_certificate" {}
 
 
 resource "aws_cloudfront_distribution" "distribution" {

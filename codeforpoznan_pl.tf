@@ -105,7 +105,7 @@ module "codeforpoznan_pl_ssl_certificate" {
   route53_zone = aws_route53_zone.codeforpoznan_pl
 
   providers = {
-    aws.north_virginia = aws.north_virginia
+    aws = aws.north_virginia
   }
 }
 

@@ -1,4 +1,4 @@
-module empatia_user {
+module "empatia_user" {
   source = "./user"
 
   name = "empatia"
@@ -31,18 +31,18 @@ resource "aws_route53_record" "soa_empatia" {
   ]
 }
 
-module empatia_ssl_certificate {
+module "empatia_ssl_certificate" {
   source = "./ssl_certificate"
 
   domain       = "bankempatii.pl"
   route53_zone = aws_route53_zone.empatia
 
   providers = {
-    aws.north_virginia = aws.north_virginia
+    aws = aws.north_virginia
   }
 }
 
-module empatia_frontend_assets {
+module "empatia_frontend_assets" {
   source = "./frontend_assets"
 
   name      = "empatia"
@@ -50,7 +50,7 @@ module empatia_frontend_assets {
   iam_user  = module.empatia_user.user
 }
 
-module empatia_cloudfront_distribution {
+module "empatia_cloudfront_distribution" {
   source = "./cloudfront_distribution"
 
   name            = "empatia"

@@ -24,13 +24,13 @@ locals {
   }
 }
 
-module dev_codeforpoznan_pl_v3_user {
+module "dev_codeforpoznan_pl_v3_user" {
   source = "./user"
 
   name = "dev_codeforpoznan_pl_v3"
 }
 
-module dev_codeforpoznan_pl_v3_db {
+module "dev_codeforpoznan_pl_v3_db" {
   source = "./database"
 
   name        = "dev_codeforpoznan_pl_v3"
@@ -42,7 +42,7 @@ resource "random_password" "dev_codeforpoznan_pl_v3_secret_key" {
   special = false
 }
 
-module dev_codeforpoznan_pl_v3_migration {
+module "dev_codeforpoznan_pl_v3_migration" {
   source = "./lambda"
 
   name            = "dev_codeforpoznan_pl_v3_migration"
@@ -65,18 +65,18 @@ module dev_codeforpoznan_pl_v3_migration {
   envvars = local.envvars
 }
 
-module dev_codeforpoznan_pl_v3_ssl_certificate {
+module "dev_codeforpoznan_pl_v3_ssl_certificate" {
   source = "./ssl_certificate"
 
   domain       = "dev.codeforpoznan.pl"
   route53_zone = aws_route53_zone.codeforpoznan_pl
 
   providers = {
-    aws.north_virginia = aws.north_virginia
+    aws = aws.north_virginia
   }
 }
 
-module dev_codeforpoznan_pl_v3_frontend_assets {
+module "dev_codeforpoznan_pl_v3_frontend_assets" {
   source = "./frontend_assets"
 
   name      = "dev_codeforpoznan_pl_v3"
@@ -84,7 +84,7 @@ module dev_codeforpoznan_pl_v3_frontend_assets {
   iam_user  = module.dev_codeforpoznan_pl_v3_user.user
 }
 
-module dev_codeforpoznan_pl_v3_mailing_identity {
+module "dev_codeforpoznan_pl_v3_mailing_identity" {
   source = "./mailing_identity"
 
   domain       = "dev.codeforpoznan.pl"
@@ -113,7 +113,7 @@ resource "aws_iam_user_policy_attachment" "dev_codeforpoznan_pl_v3_ses_policy_at
   user       = module.dev_codeforpoznan_pl_v3_user.user.name
 }
 
-module dev_codeforpoznan_pl_v3_serverless_api {
+module "dev_codeforpoznan_pl_v3_serverless_api" {
   source = "./serverless_api"
 
   name                = "dev_codeforpoznan_pl_v3"
@@ -136,7 +136,7 @@ module dev_codeforpoznan_pl_v3_serverless_api {
   envvars = local.envvars
 }
 
-module dev_codeforpoznan_pl_v3_cloudfront_distribution {
+module "dev_codeforpoznan_pl_v3_cloudfront_distribution" {
   source = "./cloudfront_distribution"
 
   name            = "dev_codeforpoznan_pl_v3"

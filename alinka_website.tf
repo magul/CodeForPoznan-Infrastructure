@@ -1,4 +1,4 @@
-module alinka_website_user {
+module "alinka_website_user" {
   source = "./user"
 
   name = "alinka_website"
@@ -31,18 +31,18 @@ resource "aws_route53_record" "soa_alinka_website" {
   ]
 }
 
-module alinka_website_ssl_certificate {
+module "alinka_website_ssl_certificate" {
   source = "./ssl_certificate"
 
   domain       = "alinka.io"
   route53_zone = aws_route53_zone.alinka_website
 
   providers = {
-    aws.north_virginia = aws.north_virginia
+    aws = aws.north_virginia
   }
 }
 
-module alinka_website_frontend_assets {
+module "alinka_website_frontend_assets" {
   source = "./frontend_assets"
 
   name      = "alinka_website"
@@ -50,7 +50,7 @@ module alinka_website_frontend_assets {
   iam_user  = module.alinka_website_user.user
 }
 
-module alinka_website_cloudfront_distribution {
+module "alinka_website_cloudfront_distribution" {
   source = "./cloudfront_distribution"
 
   name            = "alinka_website"

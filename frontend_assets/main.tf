@@ -1,9 +1,9 @@
-variable name {
+variable "name" {
   type = string
 }
 
-variable s3_bucket {}
-variable iam_user {}
+variable "s3_bucket" {}
+variable "iam_user" {}
 
 resource "aws_s3_bucket_object" "bucket_object" {
   bucket = var.s3_bucket.id

@@ -1,17 +1,12 @@
-variable domain {
+variable "domain" {
   type = string
 }
 
-variable route53_zone {}
-
-provider "aws" {
-  alias = "north_virginia"
-}
+variable "route53_zone" {}
 
 resource "aws_acm_certificate" "certificate" {
   domain_name       = var.domain
   validation_method = "DNS"
-  provider          = aws.north_virginia
 }
 
 resource "aws_route53_record" "certificate_validation_record" {
@@ -40,7 +35,6 @@ resource "aws_acm_certificate_validation" "certificate_validation" {
   validation_record_fqdns = [
     for record in aws_route53_record.certificate_validation_record : record.fqdn
   ]
-  provider = aws.north_virginia
 
   depends_on = [
     aws_route53_record.certificate_validation_record
@@ -48,5 +42,6 @@ resource "aws_acm_certificate_validation" "certificate_validation" {
 }
 
 output "certificate" {
-  value = aws_acm_certificate.certificate
+  value     = aws_acm_certificate.certificate
+  sensitive = true
 }

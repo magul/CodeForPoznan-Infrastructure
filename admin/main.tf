@@ -1,7 +1,7 @@
-variable name {
+variable "name" {
   type = string
 }
-variable public_key {
+variable "public_key" {
   type = string
 }
 

@@ -1,33 +1,33 @@
-variable name {
+variable "name" {
   type = string
 }
-variable runtime {
+variable "runtime" {
   type = string
 }
-variable handler {
+variable "handler" {
   type = string
 }
-variable subnets {
-  type    = list
+variable "subnets" {
+  type    = list(any)
   default = []
 }
-variable security_groups {
-  type    = list
+variable "security_groups" {
+  type    = list(any)
   default = []
 }
-variable envvars {
-  type    = map
+variable "envvars" {
+  type    = map(any)
   default = {}
 }
 
-variable s3_bucket {}
-variable iam_user {}
-variable additional_policies {
-  type    = list
+variable "s3_bucket" {}
+variable "iam_user" {}
+variable "additional_policies" {
+  type    = list(any)
   default = []
 }
 
-module lambda {
+module "lambda" {
   source = "../lambda"
 
   name                = "${var.name}_serverless_api"
