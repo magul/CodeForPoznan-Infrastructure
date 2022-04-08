@@ -19,6 +19,11 @@ variable "timeout" {
   type    = number
   default = 15
 }
+variable "concurrency" {
+  type        = number
+  default     = null
+  description = "Reserved concurrency. Defaults to 3 or 5 based on var.name. If specified, it's value is used instead."
+}
 
 variable "s3_bucket" {}
 variable "iam_user" {}
@@ -87,6 +92,12 @@ resource "aws_s3_object" "object" {
   ]
 }
 
+locals {
+  # resource name starts with dev ?
+  concurrency_based_on_name = can(regex("^dev_", var.name)) ? 3 : 5
+  concurrency               = var.concurrency == null ? local.concurrency_based_on_name : var.concurrency
+}
+
 resource "aws_lambda_function" "function" {
   function_name = replace(var.name, ".", "_")
 
@@ -99,6 +110,8 @@ resource "aws_lambda_function" "function" {
 
   memory_size = var.memory_size
   timeout     = var.timeout
+
+  reserved_concurrent_executions = local.concurrency
 
   vpc_config {
     subnet_ids = [
