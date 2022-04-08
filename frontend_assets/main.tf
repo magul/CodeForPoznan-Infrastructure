@@ -5,7 +5,7 @@ variable "name" {
 variable "s3_bucket" {}
 variable "iam_user" {}
 
-resource "aws_s3_bucket_object" "bucket_object" {
+resource "aws_s3_object" "object" {
   bucket = var.s3_bucket.id
   key    = "${var.name}/"
 
@@ -21,7 +21,7 @@ data "aws_iam_policy_document" "policy" {
     sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3"
     effect    = "Allow"
     actions   = ["s3:DeleteObject", "s3:PutObject"]
-    resources = ["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}*"]
+    resources = ["${var.s3_bucket.arn}/${aws_s3_object.object.key}*"]
   }
 }
 
@@ -30,7 +30,7 @@ resource "aws_iam_policy" "policy" {
   policy = data.aws_iam_policy_document.policy.json
 
   depends_on = [
-    aws_s3_bucket_object.bucket_object,
+    aws_s3_object.object,
   ]
 }
 

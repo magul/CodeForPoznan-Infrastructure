@@ -116,6 +116,26 @@ module "codeforpoznan_pl_mailing_identity" {
   route53_zone = aws_route53_zone.codeforpoznan_pl
 }
 
+// shared public bucket (we will push here all static assets in separate directories)
+resource "aws_s3_bucket" "codeforpoznan_public" {
+  bucket = "codeforpoznan-public"
+
+  lifecycle {
+    ignore_changes = [
+      cors_rule,
+    ]
+  }
+}
+
+resource "aws_s3_bucket_cors_configuration" "codeforpoznan_public_cors" {
+  bucket = aws_s3_bucket.codeforpoznan_public.bucket
+
+  cors_rule {
+    allowed_methods = ["GET", "HEAD"]
+    allowed_origins = ["*"]
+  }
+}
+
 data "aws_iam_policy_document" "codeforpoznan_public_policy" {
   version = "2012-10-17"
 
@@ -142,26 +162,39 @@ data "aws_iam_policy_document" "codeforpoznan_public_policy" {
   }
 }
 
-// shared public bucket (we will push here all static assets in separate directories)
-resource "aws_s3_bucket" "codeforpoznan_public" {
-  bucket = "codeforpoznan-public"
-
-  cors_rule {
-    allowed_methods = ["GET", "HEAD"]
-    allowed_origins = ["*"]
-  }
-
+resource "aws_s3_bucket_policy" "codeforpoznan_public_policy" {
+  bucket = aws_s3_bucket.codeforpoznan_public.bucket
   policy = data.aws_iam_policy_document.codeforpoznan_public_policy.json
 }
 
 // shared private bucket for storing zipped projects and lambdas code
 resource "aws_s3_bucket" "codeforpoznan_lambdas" {
   bucket = "codeforpoznan-lambdas"
+
+  lifecycle {
+    ignore_changes = [
+      grant,
+    ]
+  }
+}
+
+resource "aws_s3_bucket_acl" "codeforpoznan_lambdas_acl" {
+  bucket = aws_s3_bucket.codeforpoznan_lambdas.bucket
   acl    = "private"
 }
 
 // shared private bucket for storing terraform state in one place
 resource "aws_s3_bucket" "codeforpoznan_tfstate" {
   bucket = "codeforpoznan-tfstate"
+
+  lifecycle {
+    ignore_changes = [
+      grant,
+    ]
+  }
+}
+
+resource "aws_s3_bucket_acl" "codeforpoznan_tfstate_acl" {
+  bucket = aws_s3_bucket.codeforpoznan_tfstate.id
   acl    = "private"
 }

@@ -12,28 +12,25 @@ terraform {
 
   required_providers {
     aws = {
-      source  = "hashicorp/aws"
-      version = "~> 2.70.1"
-      # version = "~> 4.8.0"
-      # version = "~> 2.36.0"
+      source                = "hashicorp/aws"
+      version               = "4.9.0"
       configuration_aliases = [aws.north_virginia]
     }
     random = {
       source  = "hashicorp/random"
-      version = "~> 2.2.1"
+      version = "3.1.2"
     }
     template = {
       source  = "hashicorp/template"
-      version = "~> 2.1.2"
+      version = "2.2.0"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
-      version = "~> 1.15.0"
-      # version = "~> 1.7.2"
+      version = "1.15.0"
     }
   }
 
-  required_version = ">= 0.13"
+  required_version = ">= 1.1.8"
 }
 
 provider "aws" {

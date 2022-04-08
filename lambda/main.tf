@@ -76,7 +76,7 @@ resource "aws_iam_role_policy_attachment" "additional_role_policy_attachment" {
   count = length(var.additional_policies)
 }
 
-resource "aws_s3_bucket_object" "bucket_object" {
+resource "aws_s3_object" "object" {
   bucket = var.s3_bucket.id
   key    = "${var.name}.zip"
   // small zip with emtpy index.js
@@ -91,7 +91,7 @@ resource "aws_lambda_function" "function" {
   function_name = replace(var.name, ".", "_")
 
   s3_bucket = var.s3_bucket.id
-  s3_key    = aws_s3_bucket_object.bucket_object.key
+  s3_key    = aws_s3_object.object.key
 
   role    = aws_iam_role.role.arn
   handler = var.handler
@@ -121,7 +121,7 @@ resource "aws_lambda_function" "function" {
 
   depends_on = [
     aws_iam_role.role,
-    aws_s3_bucket_object.bucket_object,
+    aws_s3_object.object,
   ]
 }
 
@@ -132,7 +132,7 @@ data "aws_iam_policy_document" "policy" {
     sid       = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}S3"
     effect    = "Allow"
     actions   = ["s3:GetObject", "s3:PutObject"]
-    resources = ["${var.s3_bucket.arn}/${aws_s3_bucket_object.bucket_object.key}"]
+    resources = ["${var.s3_bucket.arn}/${aws_s3_object.object.key}"]
   }
 
   statement {
@@ -148,7 +148,7 @@ resource "aws_iam_policy" "policy" {
   policy = data.aws_iam_policy_document.policy.json
 
   depends_on = [
-    aws_s3_bucket_object.bucket_object,
+    aws_s3_object.object,
   ]
 }
 

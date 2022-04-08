@@ -65,6 +65,11 @@ resource "aws_instance" "bastion" {
     aws_security_group.bastion,
     aws_default_security_group.main,
   ]
+
+  lifecycle {
+    # bastion is a NAT gateway for lambdas' outgoing traffic
+    prevent_destroy = true
+  }
 }
 
 resource "aws_eip" "bastion" {
