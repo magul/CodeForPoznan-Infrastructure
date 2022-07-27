@@ -39,11 +39,5 @@ resource "aws_db_instance" "db" {
   lifecycle {
     # we don't want to destroy db by accident
     prevent_destroy = true
-
-    # TODO: this does not work as expected, yet. come back when v1.2 is released
-    # https://github.com/hashicorp/terraform/issues/28803
-    ignore_changes = [
-      latest_restorable_time,
-    ]
   }
 }
