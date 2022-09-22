@@ -16,7 +16,7 @@ resource "aws_db_instance" "db" {
   identifier = "main-postgres"
 
   engine         = "postgres"
-  engine_version = "12.8"
+  engine_version = "12.11"
 
   instance_class    = "db.t2.micro"
   allocated_storage = 8
