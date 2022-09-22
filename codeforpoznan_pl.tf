@@ -83,7 +83,7 @@ resource "aws_route53_record" "dmarc" {
   type    = "TXT"
   ttl     = "300"
   records = [
-    "v=DMARC1; p=reject; rua=mailto:hello@codeforpoznan.pl; pct=100"
+    "v=DMARC1; p=reject"
   ]
 }
 
