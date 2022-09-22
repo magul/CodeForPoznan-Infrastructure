@@ -6,27 +6,23 @@ terraform {
     region  = "eu-west-1"
   }
 
-  # backend "local" {
-  #   path = "./state.tfstate"
-  # }
-
   required_providers {
     aws = {
       source                = "hashicorp/aws"
-      version               = "4.9.0"
+      version               = "4.31.0"
       configuration_aliases = [aws.north_virginia]
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.1.2"
+      version = "3.4.3"
     }
-    template = {
-      source  = "hashicorp/template"
+    cloudinit = {
+      source = "hashicorp/cloudinit"
       version = "2.2.0"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
-      version = "1.15.0"
+      version = "1.17.1"
     }
   }
 
