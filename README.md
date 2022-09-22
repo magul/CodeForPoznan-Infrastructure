@@ -6,12 +6,12 @@ Repository contains description of Code for Poznań infrastructure.
 
 ```shell
 terraform --version
-Terraform v1.2.6
-on linux_amd64
-+ provider registry.terraform.io/cyrilgdn/postgresql v1.15.0
-+ provider registry.terraform.io/hashicorp/aws v4.9.0
-+ provider registry.terraform.io/hashicorp/random v3.1.2
-+ provider registry.terraform.io/hashicorp/template v2.2.0
+Terraform v1.3.0
+on darwin_arm64
++ provider registry.terraform.io/cyrilgdn/postgresql v1.17.1
++ provider registry.terraform.io/hashicorp/aws v4.31.0
++ provider registry.terraform.io/hashicorp/cloudinit v2.2.0
++ provider registry.terraform.io/hashicorp/random v3.4.3
 ```
 
 
