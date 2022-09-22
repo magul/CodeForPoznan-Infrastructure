@@ -17,7 +17,7 @@ terraform {
       version = "3.4.3"
     }
     cloudinit = {
-      source = "hashicorp/cloudinit"
+      source  = "hashicorp/cloudinit"
       version = "2.2.0"
     }
     postgresql = {
