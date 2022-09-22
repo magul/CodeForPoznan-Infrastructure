@@ -17,34 +17,21 @@ resource "aws_security_group" "bastion" {
 }
 
 locals {
-  authorized_keys = [
+  keys = [
     module.tomasz_magulski.public_key,
     module.artur_tamborski.public_key,
     module.wojciech_patelka.public_key,
   ]
 }
 
-data "template_cloudinit_config" "bastion" {
+data "cloudinit_config" "bastion" {
   gzip          = true
   base64_encode = true
 
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-
-    # https://www.kabisa.nl/tech/cost-saving-with-nat-instances/
-    content = <<TEMPLATE
-package_update: true
-
-bootcmd:
-  - sysctl -w net.ipv4.ip_forward=1
-  - iptables -t nat -A POSTROUTING -o ens5 -j MASQUERADE
-
-ssh_authorized_keys:
-%{for key in local.authorized_keys~}
-  - ${key}
-%{endfor~}
-    TEMPLATE
+    content      = templatefile("./bastion-init.yml", { keys = local.keys })
   }
 }
 
@@ -52,7 +39,7 @@ resource "aws_instance" "bastion" {
   ami               = "ami-09e0d6fdf60750e33" # Ubuntu 20.04 LTS, eu-west-1
   instance_type     = "t4g.nano"
   subnet_id         = aws_subnet.public_a.id
-  user_data_base64  = data.template_cloudinit_config.bastion.rendered
+  user_data_base64  = data.cloudinit_config.bastion.rendered
   source_dest_check = false
 
   vpc_security_group_ids = [
