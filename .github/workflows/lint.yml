@@ -1,15 +1,13 @@
-name: lint tf
+name: lint
 
 on:
   push:
     branches: [main]
-    paths: ['**/**.tf']
   pull_request:
     branches: [main]
-    paths: ['**/**.tf']
 
 jobs:
-  lint:
+  code:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -18,3 +16,6 @@ jobs:
           terraform-version: 1.3.0
 
       - run: make check
+
+  data:
+    uses: CodeForPoznan/actions/.github/workflows/call-validate-data-files.yml@v2
