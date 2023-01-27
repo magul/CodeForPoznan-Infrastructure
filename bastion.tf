@@ -31,7 +31,7 @@ data "cloudinit_config" "bastion" {
   part {
     filename     = "init.cfg"
     content_type = "text/cloud-config"
-    content      = templatefile("./bastion-init.yml", { keys = local.keys })
+    content      = templatefile("./bastion-init.yml.tpl", { keys = local.keys })
   }
 }
 
