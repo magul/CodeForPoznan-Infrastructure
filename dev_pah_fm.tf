@@ -20,7 +20,7 @@ module "dev_pah_fm_migration" {
   source = "./lambda"
 
   name            = "dev_pah_fm_migration"
-  runtime         = "python3.6"
+  runtime         = "python3.10"
   handler         = "handlers.migration"
   s3_bucket       = aws_s3_bucket.codeforpoznan_lambdas
   iam_user        = module.dev_pah_fm_user.user
@@ -69,7 +69,7 @@ module "dev_pah_fm_serverless_api" {
   source = "./serverless_api"
 
   name      = "dev_pah_fm"
-  runtime   = "python3.6"
+  runtime   = "python3.10"
   handler   = "handlers.api"
   s3_bucket = aws_s3_bucket.codeforpoznan_lambdas
   iam_user  = module.dev_pah_fm_user.user
