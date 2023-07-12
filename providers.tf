@@ -1,4 +1,6 @@
 terraform {
+  required_version = ">= 1.5.0"
+
   backend "s3" {
     bucket  = "codeforpoznan-tfstate"
     key     = "codeforpoznan.tfstate"
@@ -9,24 +11,22 @@ terraform {
   required_providers {
     aws = {
       source                = "hashicorp/aws"
-      version               = "4.31.0"
+      version               = "5.7.0"
       configuration_aliases = [aws.north_virginia]
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.4.3"
+      version = "3.5.1"
     }
     cloudinit = {
       source  = "hashicorp/cloudinit"
-      version = "2.2.0"
+      version = "2.3.2"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
-      version = "1.17.1"
+      version = "1.19.0"
     }
   }
-
-  required_version = ">= 1.3.0"
 }
 
 provider "aws" {
