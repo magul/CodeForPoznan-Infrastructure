@@ -11,16 +11,16 @@ terraform {
   required_providers {
     aws = {
       source                = "hashicorp/aws"
-      version               = "5.7.0"
+      version               = "5.61.0"
       configuration_aliases = [aws.north_virginia]
     }
     random = {
       source  = "hashicorp/random"
-      version = "3.5.1"
+      version = "3.6.2"
     }
     cloudinit = {
       source  = "hashicorp/cloudinit"
-      version = "2.3.2"
+      version = "2.3.4"
     }
     postgresql = {
       source  = "cyrilgdn/postgresql"
