@@ -113,6 +113,11 @@ resource "aws_iam_user_policy_attachment" "dev_codeforpoznan_pl_v3_ses_policy_at
   user       = module.dev_codeforpoznan_pl_v3_user.user.name
 }
 
+import {
+  to = module.dev_codeforpoznan_pl_v3_serverless_api.aws_api_gateway_stage.stage
+  id = "z00svsc3od/devel"
+}
+
 module "dev_codeforpoznan_pl_v3_serverless_api" {
   source = "./serverless_api"
 
@@ -153,8 +158,8 @@ module "dev_codeforpoznan_pl_v3_cloudfront_distribution" {
       origin_path = "/dev_codeforpoznan_pl_v3"
     }
     api_gateway = {
-      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_codeforpoznan_pl_v3_serverless_api.deployment.invoke_url).hostname
-      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_codeforpoznan_pl_v3_serverless_api.deployment.invoke_url).path
+      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_codeforpoznan_pl_v3_serverless_api.stage.invoke_url).hostname
+      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_codeforpoznan_pl_v3_serverless_api.stage.invoke_url).path
       custom_origin = true
     }
   }

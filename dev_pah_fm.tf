@@ -65,6 +65,11 @@ module "dev_pah_fm_frontend_assets" {
   iam_user  = module.dev_pah_fm_user.user
 }
 
+import {
+  to = module.dev_pah_fm_serverless_api.aws_api_gateway_stage.stage
+  id = "8sbwf5qbi1/devel"
+}
+
 module "dev_pah_fm_serverless_api" {
   source = "./serverless_api"
 
@@ -112,8 +117,8 @@ module "dev_pah_fm_cloudfront_distribution" {
       origin_path = "/dev_pah_fm"
     }
     api_gateway = {
-      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.deployment.invoke_url).hostname
-      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.deployment.invoke_url).path
+      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.stage.invoke_url).hostname
+      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.dev_pah_fm_serverless_api.stage.invoke_url).path
       custom_origin = true
     }
   }

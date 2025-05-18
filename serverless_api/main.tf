@@ -105,7 +105,6 @@ resource "aws_api_gateway_integration" "proxy_integration" {
 
 resource "aws_api_gateway_deployment" "deployment" {
   rest_api_id = aws_api_gateway_rest_api.rest_api.id
-  stage_name  = "devel"
 
   depends_on = [
     aws_api_gateway_integration.root_integration,
@@ -113,14 +112,20 @@ resource "aws_api_gateway_deployment" "deployment" {
   ]
 }
 
+resource "aws_api_gateway_stage" "stage" {
+  deployment_id = aws_api_gateway_deployment.deployment.id
+  rest_api_id   = aws_api_gateway_rest_api.rest_api.id
+  stage_name    = "devel"
+}
+
 resource "aws_lambda_permission" "permission" {
   function_name = module.lambda.function.function_name
   statement_id  = "${replace(title(replace(var.name, "/[\\._]/", " ")), " ", "")}Invoke"
   action        = "lambda:InvokeFunction"
   principal     = "apigateway.amazonaws.com"
-  source_arn    = "${replace(aws_api_gateway_deployment.deployment.execution_arn, "devel", "")}*/*"
+  source_arn    = "${replace(aws_api_gateway_stage.stage.execution_arn, "devel", "")}*/*"
 }
 
-output "deployment" {
-  value = aws_api_gateway_deployment.deployment
+output "stage" {
+  value = aws_api_gateway_stage.stage
 }

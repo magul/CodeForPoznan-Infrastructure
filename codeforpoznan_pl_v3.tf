@@ -112,8 +112,8 @@ module "codeforpoznan_pl_v3_cloudfront_distribution" {
       origin_path = "/codeforpoznan_pl_v3"
     }
     api_gateway = {
-      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.codeforpoznan_pl_v3_serverless_api.deployment.invoke_url).hostname
-      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.codeforpoznan_pl_v3_serverless_api.deployment.invoke_url).path
+      domain_name   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.codeforpoznan_pl_v3_serverless_api.stage.invoke_url).hostname
+      origin_path   = regex("https://(?P<hostname>[^/?#]*)(?P<path>[^?#]*)", module.codeforpoznan_pl_v3_serverless_api.stage.invoke_url).path
       custom_origin = true
     }
   }
@@ -135,6 +135,11 @@ module "codeforpoznan_pl_v3_cloudfront_distribution" {
       response_page_path = "/index.html"
     }
   ]
+}
+
+import {
+  to = module.codeforpoznan_pl_v3_serverless_api.aws_api_gateway_stage.stage
+  id = "q4ih7hkyl4/devel"
 }
 
 module "codeforpoznan_pl_v3_serverless_api" {

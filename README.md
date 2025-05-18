@@ -4,19 +4,6 @@ Repository contains description of Code for Poznań infrastructure.
 You'll need AWS credentials into our organization and a tunnel to our bastion server 
 in order to work with this code. This can't be done unless you've been added by one of admins (see ./admins.tf file).
 
-#### version used
-
-```shell
-terraform version
-Terraform v1.5.2
-on darwin_arm64
-+ provider registry.terraform.io/cyrilgdn/postgresql v1.19.0
-+ provider registry.terraform.io/hashicorp/aws v5.7.0
-+ provider registry.terraform.io/hashicorp/cloudinit v2.3.2
-+ provider registry.terraform.io/hashicorp/random v3.5.1
-```
-
-
 #### Initialize project
 
 ```
