@@ -16,7 +16,7 @@ resource "aws_db_instance" "db" {
   identifier = "main-postgres"
 
   engine         = "postgres"
-  engine_version = "12.19"
+  engine_version = "13.18"
 
   instance_class    = "db.t3.micro"
   allocated_storage = 8
@@ -30,6 +30,8 @@ resource "aws_db_instance" "db" {
   db_subnet_group_name    = aws_db_subnet_group.private.name
 
   final_snapshot_identifier = "main-postgres-final-snapshot"
+
+  ca_cert_identifier = "rds-ca-rsa2048-g1"
 
   depends_on = [
     random_password.db_password,
