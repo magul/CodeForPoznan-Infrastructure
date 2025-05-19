@@ -137,11 +137,6 @@ module "codeforpoznan_pl_v3_cloudfront_distribution" {
   ]
 }
 
-import {
-  to = module.codeforpoznan_pl_v3_serverless_api.aws_api_gateway_stage.stage
-  id = "q4ih7hkyl4/devel"
-}
-
 module "codeforpoznan_pl_v3_serverless_api" {
   source = "./serverless_api"
 

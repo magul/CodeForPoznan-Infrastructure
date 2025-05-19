@@ -113,11 +113,6 @@ resource "aws_iam_user_policy_attachment" "dev_codeforpoznan_pl_v3_ses_policy_at
   user       = module.dev_codeforpoznan_pl_v3_user.user.name
 }
 
-import {
-  to = module.dev_codeforpoznan_pl_v3_serverless_api.aws_api_gateway_stage.stage
-  id = "z00svsc3od/devel"
-}
-
 module "dev_codeforpoznan_pl_v3_serverless_api" {
   source = "./serverless_api"
 
