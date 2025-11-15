@@ -4,10 +4,6 @@ variable "name" {
 
 variable "db_instance" {}
 
-
-// https://github.com/hashicorp/terraform/issues/8367
-// before running terraform create a ssh tunel
-// ssh ubuntu@bastion.codeforpoznan.pl -L 15432:main-postgres.ct6cadodkpjm.eu-west-1.rds.amazonaws.com:5432
 provider "postgresql" {
   host            = "127.0.0.1" // var.db_instance.address
   port            = "15432"     // var.db_instance.port
