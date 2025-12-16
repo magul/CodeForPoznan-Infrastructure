@@ -4,7 +4,7 @@ resource "aws_route53_record" "pah_fm" {
   type    = "A"
   ttl     = "300"
   records = [
-    "52.232.62.212",
+    "104.45.45.190",
   ]
 }
 
@@ -14,6 +14,6 @@ resource "aws_route53_record" "wildcard_pah_fm" {
   type    = "A"
   ttl     = "300"
   records = [
-    "52.232.62.212",
+    "104.45.45.190",
   ]
 }
